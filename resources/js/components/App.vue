@@ -58,4 +58,14 @@ body{
   height: 100svh;
   overflow-x: hidden
 }
+*::-webkit-scrollbar {
+  width: 0;
+}
+*::-webkit-scrollbar-track {
+  background: #242C3B;
+}
+*::-webkit-scrollbar-thumb {
+  background-color: #4B4CED;
+  border-radius: 5px;
+}
 </style>
