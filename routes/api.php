@@ -6,6 +6,9 @@ use App\Http\Controllers\CarController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\RaceController;
 use App\Http\Controllers\PartController;
+use App\Http\Controllers\GearController;
+use App\Models\Check_item;
+use App\Models\ObjectRace;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -25,7 +28,8 @@ Route::prefix('cars')->controller(CarController::class)
     Route::post('/levelUp', 'levelUp');
     Route::post('/startRace', 'startRace');
     Route::get('/rand','rand');
-    Route::get('/fuelUp','fuelUp');
+    Route::get('/shop','shop');
+    Route::post('/buyInShop','buyInShop');
 });
 
 Route::prefix('user')->controller(UserController::class)
@@ -50,5 +54,31 @@ Route::prefix('parts')->controller(PartController::class)
     Route::post('/returnPart', 'returnPart');
     Route::post('/equip', 'equip');
     Route::post('/takeOff', 'takeOff');
+    Route::post('/takeOffAll', 'takeOffAll');
     Route::post('/sell', 'sell');
+    Route::get('/rand','rand');
+    Route::post('/fallingOut', 'fallingOut');
+    Route::get('/shop','shop');
+    Route::post('/buyInShop','buyInShop');
+});
+
+Route::prefix('gears')->controller(GearController::class)
+->group(function(){
+    Route::get('/','index');
+});
+
+Route::get('/checkCars', function(){
+    return Check_item::where('user_id', Auth::id())
+    ->where('part_id',null)->get();
+});
+Route::get('/checkParts', function(){
+    return Check_item::where('user_id', Auth::id())
+    ->where('car_id',null)->get();
+});
+Route::post('/raceObjectImg', function(Request $request){
+    $validations = $request->validate([
+      'id' => ['required', 'integer'],
+    ]);
+
+    return ObjectRace::where('race_id', $request->id)->get();
 });

@@ -1,23 +1,75 @@
 <template>
-  <main id="game">
+  <audio :src="audioSrc" controls hidden>
+    <source :src="audioSrc" type="audio/mp3">
+  </audio>
+  <main id="game" v-if="race">
     <div class="boards" v-if="car && enemyCar">
-      <div class="player-board">
-        <p>{{ car.name }}</p>
-        <p style="font-size: 26px;">{{ userName }}</p>
+      <div class="board" style="position: relative;">
+        <p class="board-car-name">{{ car.name }}</p>
+        <p class="board-name">{{ userName }}</p>
+        <div class="atributes" style="position: absolute;
+        bottom: 20px; left: 20px;">
+          <div style="width: 60%;">
+            <div class="atribute">
+              <div class="speed-bg"><img src="./img/speed.png" alt=""></div>
+              <div class="scale">{{ Math.round(car.speed * (car.rare/2)) }}</div>
+            </div>
+            <div class="atribute">
+              <div class="power-bg"><img src="./img/power.png" alt=""></div>
+              <div class="scale">{{ Math.round(car.power * (car.rare/2))}}</div>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="enemy-board">
-        <p>{{ enemyCar.name }}</p>
-        <p style="font-size: 26px;">{{ enemyCar.user.name}}</p>
+      <div class="board" style="text-align: end; animation-name: leftShow;
+      border-radius: 0 10px 10px 0; position: relative;">
+        <p class="board-car-name">{{ enemyCar.name }}</p>
+        <p class="board-name">{{ enemyCar.user.name}}</p>
+        <div class="atributes" style="justify-content: end; position: absolute;
+        bottom: 20px; right: 20px;">
+          <div style="width: 60%;">
+            <div class="atribute">
+              <div class="scale" style="border-radius: 10px 0 0 10px;">
+                {{ Math.round(enemyCar.speed * (enemyCar.rare/2)) }}
+              </div>
+              <div class="speed-bg" style="border-radius: 0 10px 10px 0;">
+                <img src="./img/speed.png" alt="" style="rotate: 180deg;">
+              </div>
+            </div>
+            <div class="atribute">
+              <div class="scale" style="border-radius: 10px 0 0 10px;">
+                {{ Math.round(enemyCar.power * (enemyCar.rare/2))}}
+              </div>
+              <div class="power-bg" style="border-radius: 0 10px 10px 0;">
+                <img src="./img/power.png" alt="">
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
-    <ModalRace :prize="prize" :isWin="isWin" :xp="xp"/>
+    <ModalRace :partName="partName" :partImg="partImg" :prize="prize" :isWin="isWin" :xp="xp"/>
     <p class="counter" hidden></p>
-    <div id="road-game">
-      <div class="player">
-        <img src="./demoimg/blue_car_tds.png" alt="">
+    <div id="road-game" :style="`background-image: url(${race.img_game});`">
+      <div class="enemy">
+        <div class="body-enemy" v-if="enemyCar">
+          <div class="enemy-img-car">
+            <img :src="`/storage/img/${(enemyCar.name).toLowerCase()}_mask.png`"
+            style="width: 100%;" :style="enemyCar.color">
+            <img :src="`/storage/img/${(enemyCar.name).toLowerCase()}.png`"
+            style="position: absolute; top: 0; left: 0; width: 100%;">
+          </div>
+        </div>
       </div>
       <div class="player">
-        <img src="./demoimg/blue_car_tds.png" alt="">
+        <div class="body-player" v-if="car">
+          <div class="player-img-car">
+            <img :src="`/storage/img/${(car.name).toLowerCase()}_mask.png`"
+            style="width: 100%;" :style="car.color">
+            <img :src="`/storage/img/${(car.name).toLowerCase()}.png`"
+            style="position: absolute; top: 0; left: 0; width: 100%;">
+          </div>
+        </div>
       </div>
     </div>
   </main>
@@ -26,23 +78,28 @@
 <script>
 import axios from 'axios';
 import ModalRace from './components/ModalRace.vue';
+import audi from './sounds/carStart.mp3';
 
 export default{
   components:{ModalRace},
   data(){
     return{
+      audioSrc: audi,
       userId: null,
       balance: 0,
       prize: 0,
       xp: 0,
       isWin: 0,
-      raceId: this.$route.params.raceId,
-      carId: this.$route.params.carId,
+      raceId: this.$route.query.raceId,
+      carId: this.$route.query.carId,
       car: null,
       race: null,
       enemyCar: null,
       count: null,
       userName: null,
+      partName: '',
+      partImg: '',
+      gameObjects: null,
     }
   },
   mounted(){
@@ -50,9 +107,27 @@ export default{
     this.getCar();
     this.getRace();
     this.getEnemyCar();
+    this.getObjectsImg();
 
+    function createFine(pl){
+      let fine = document.createElement('div');
+      fine.classList.add('fine');
+      document.querySelector(pl).appendChild(fine);
+      let fineText = document.createElement('p');
+      fineText.textContent = -5;
+      let fineImg = document.createElement('img');
+      fineImg.src = '/storage/img/speed.png';
+      fine.appendChild(fineText);
+      fine.appendChild(fineImg);
+      setTimeout(function(){
+        fine.remove();
+      },600);
+    }
+   
+    const end = getRand(20000, 25000);
     let c = 4
-    setTimeout(function(){
+    setTimeout(() => {
+      this.playNaAudio();
       const interval = setInterval(function(){
       c--;
       document.querySelector('.counter').textContent = c;
@@ -62,67 +137,158 @@ export default{
         document.querySelector('.counter').textContent = '';
         document.querySelector('.counter').className = '';
         document.getElementById('road-game').style.animationName = 'ride';
-        document.getElementById('road-game').style.animationDuration = '.3s';
+        document.getElementById('road-game')
+        .style.animationDuration =`${end - 8000}ms`;
       }
       },1000);
     },6000);
 
-    /*setTimeout(function(){
-      document.getElementById('road-game').style.animationName = 'ride';
-      let n = 2;
-      setInterval(function(){
-        n -= 0.2
-        if(n <= 0.3){
-          document.getElementById('road-game').style.animationDuration = '.3s';
-          clearInterval();
-        }
-        document.getElementById('road-game').style.animationDuration = `${n}s`;
-      },500)
-    }, 3000);*/
-
     function getRand(min, max) {
       return Math.round(Math.random() * (max - min) + min);
     }
-    const players = document.querySelectorAll('.player');
-    const end = getRand(20000, 25000);
 
-    setTimeout(function(){
-      let speedInter = setInterval(function(){
-        let x1 = getRand(1,10);
-        let y1 = getRand(1,10);
-        let x2 = getRand(1,10);
-        let y2 = getRand(1,10);
+    let sec = 2;
+    let finePlayer = 0;
+    let fineEnemy = 0;
 
-        players[0].style.margin =`${x1}px ${y1}px`;
-        players[1].style.margin = `${x2}px ${y2}px`;
-      },500)
+    setTimeout(() => {
+      const enemy = document.querySelector('.enemy');
+      const player = document.querySelector('.player');
+
+      let speedInter = setInterval(() => {
+        sec -= 0.2;
+        if(this.gameObjects.length > 0){
+          if(getRand(0,101) > 70){
+            let i = getRand(0,this.gameObjects.length-1);
+
+            let objectContainer = document.createElement('div');
+            objectContainer.classList.add('object-game');
+
+            let objectBody = document.createElement('div');
+            objectBody.style = `width : ${this.gameObjects[i].size}%;
+              z-index: ${this.gameObjects[i].z_index};
+              display:flex; justify-content: center;`;
+
+            let objectImg = document.createElement('img');
+            objectImg.src = `${this.gameObjects[i].img}`;
+            objectImg.style.width = `${this.gameObjects[i].img_size}%`;
+
+            document.querySelector('#road-game').appendChild(objectContainer);
+            objectContainer.appendChild(objectBody);
+            objectBody.appendChild(objectImg);
+
+            if(getRand(0,1)){
+              objectContainer.style.justifyContent = 'end'
+              if(this.gameObjects[i].sliding){
+                setTimeout(function(){
+                  player.style.rotate = `${getRand(-5,5)}deg`;
+                  finePlayer += 5;
+                  createFine('.player-img-car');
+                },700);
+                setTimeout(function(){
+                  player.style.rotate = `0deg`;
+                },1000);
+              }
+            }else{
+              objectContainer.style.justifyContent = 'start'
+              if(this.gameObjects[i].sliding){
+                setTimeout(function(){
+                  enemy.style.rotate = `${getRand(-5,5)}deg`;
+                  fineEnemy += 5;
+                  createFine('.enemy-img-car');
+                },700);
+                setTimeout(function(){
+                  enemy.style.rotate = `0deg`;
+                },1000);
+              }
+            }
+            objectContainer.style.animationDuration = `${sec}s`
+            objectContainer.style.animationName = 'ObjectShow'
+          }
+        }
+
+        //let trail = document.querySelector('.trail')
+        //trail.style.opacity = 1;
+
+        //setTimeout(function(){
+        //  trail.style.opacity = 0;
+        //}, 1000);
+
+        let y1 = getRand(-200,200);
+        let y2 = getRand(-200,200);
+
+        document.querySelector('.body-player')
+        .style.marginBottom =`${y1}px`;
+
+        document.querySelector('.body-enemy')
+        .style.marginBottom =`${y2}px`;
+
+        if(this.race.dirt){
+          let x1 = getRand(-5,5);
+          let x2 = getRand(-5,5);
+
+          if(getRand(0,1)){
+            player.style.rotate = `${x1}deg`;
+            document.querySelector('.body-player')
+            .style.marginBottom =`${y1-100}px`;
+            finePlayer += 5;
+            createFine('.player-img-car');
+            setTimeout(function(){
+              player.style.rotate = `0deg`;
+            },1900);
+          }else{
+            enemy.style.rotate = `${x2}deg`;
+            document.querySelector('.body-enemy')
+            .style.marginBottom =`${y2-100}px`;
+            fineEnemy += 5;
+            createFine('.enemy-img-car');
+            setTimeout(function(){
+              enemy.style.rotate = `0deg`;
+            },1900);
+          }
+        }
+      },2000)
       setTimeout(function(){
         clearInterval(speedInter);
-      }, end - 6000)
+      }, end - 11000)
     },10000);
 
     setTimeout(() => {
       const carBonus =
-      Math.round((Math.round(this.car.speed * (this.car.rare/2))
-      + Math.round(this.car.power * (this.car.rare/2)))/6);
+      Math.round((Math.round(((this.car.speed * this.car.rare/2)
+      - finePlayer*10))
+      + Math.round(this.car.power
+      * (this.car.rare/2)))/6);
 
       const enemyCarBonus =
-      Math.round((Math.round(this.enemyCar.speed * (this.enemyCar.rare/2))
-      + Math.round(this.enemyCar.power * (this.enemyCar.rare/2)))/6);
+      Math.round((Math.round(((this.enemyCar.speed * this.enemyCar.rare/2))
+      - fineEnemy*10)
+      + Math.round(this.enemyCar.power
+      * (this.enemyCar.rare/2)))/6);
 
       console.log(carBonus, enemyCarBonus, carBonus - enemyCarBonus);
 
       if(getRand(0,101) > 50 + (carBonus - enemyCarBonus)){
-        players[0].style.transition = '2s';
-        players[0].style.marginTop = '900px';
+        document.querySelector('.body-enemy').style.transition = '2.9s';
+        document.querySelector('.body-enemy').style.marginBottom = '800px';
         setTimeout(() => {
           modalRace.showModal();
         },2000);
 
         axios.post(`/api/cars/win/${this.car.id}`, {win: this.isWin, xp: this.xp});
       }else{
-        players[1].style.transition = '2s';
-        players[1].style.marginTop = '900px';
+        if(getRand(0,101) > 92){
+          axios.get('/api/parts/rand').then(res => {
+            this.partName = res.data.name;
+            this.partImg = res.data.img;
+            let partId = res.data.id;
+            axios.post('/api/parts/fallingOut',{id : partId}).then(res => {
+              localStorage.setItem('newPart', res.data);
+            });
+          });
+        }
+        document.querySelector('.body-player').style.transition = '2.9s';
+        document.querySelector('.body-player').style.marginBottom = '800px';
         this.isWin = 1;
         this.xp = Math.round(((this.prize/50/(parseInt(this.car.lvl))*
         Math.round(Math.random() * 2 + 1))) * 100) / 100;
@@ -170,11 +336,68 @@ export default{
         console.log(res.data);
       });
     },
+    getObjectsImg(){
+      axios.post('/api/raceObjectImg',{id: this.raceId}).then(res => {
+        this.gameObjects = res.data;
+      })
+    },
+    playNaAudio(){
+      document.querySelector('audio').play();
+    },
   }
 }
 </script>
 
 <style>
+.player-img-car, .enemy-img-car{
+  position: relative;
+  width: 85%;
+}
+.fine{
+  position: absolute;
+  color: red;
+  bottom: -40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 55%;
+  transition: .5s;
+  animation-duration: 1.2s;
+  animation-name: upFine;
+  animation-timing-function: linear;
+  opacity: 0;
+}
+@keyframes upFine {
+  0%{
+    opacity: 1;
+    bottom: -40px;
+  }
+  100%{
+    opacity: 0;
+    bottom: 40px;
+  }
+}
+.object-game{
+  width: 100%;
+  display: flex;
+  position: absolute;
+  margin-bottom: 1100px;
+  justify-content: center;
+  animation-timing-function: linear;
+}
+.object-game-body{
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+@keyframes ObjectShow {
+  0%{
+    margin-bottom: 1100px;
+  }
+  100%{
+    margin-bottom: -1100px;
+  }
+}
 #game{
   flex-grow: 1;
   width: 30%;
@@ -185,7 +408,6 @@ export default{
 }
 #road-game{
   position: absolute;
-  background-image: url(demoimg/roadtds.png);
   box-shadow: inset 0 0 50px black;
   display: flex;
   justify-content: center;
@@ -194,35 +416,80 @@ export default{
   height: 75svh;
   background-size: cover;
   background-repeat: repeat-x;
-  animation-iteration-count: infinite;
-  animation-timing-function: linear;
+  animation-fill-mode: forwards;
+  animation-timing-function: cubic-bezier(.44,.01,.96,1);
   overflow: hidden;
+  background-position: 100% 100%;
 }
 @keyframes ride {
   0%{
-    background-position: 0 0;
+    background-position: 100% 100%;
   }
   100%{
-    background-position: 100% 100%;
+    background-position: 0 0;
   }
 }
 .player{
   z-index: 10;
-  transform: rotate(90deg);
-  transition: .4s;
-  width: 55%;
+  width: 40%;
+  display: flex;
+  justify-content: center;
+  animation-name: raceStart;
+  animation-duration: 5s;
+  animation-timing-function: linear;
+  transition: .5s;
+}
+.enemy{
+  z-index: 10;
+  width: 40%;
+  display: flex;
+  justify-content: center;
+  animation-name: raceStart;
+  animation-duration: 5s;
+  animation-timing-function: linear;
+  transition: .5s;
 }
 .player img{
   width: 100%;
+}
+.enemy img{
+  width: 100%;
+}
+.body-player{
+  width: 46%;
+  display: flex;
+  justify-content: center;
+  transition: 1.8s;
+  position: relative;
+}
+.trail{
+  position: absolute;
+  bottom: -40px;
+  transition: opacity 1s ease;
+  opacity: 0;
+  width: 100%;
+  background-image: url(./img/trail.png);
+  background-size: cover;
+  height: 50px;
+  z-index: -1;
+}
+.body-enemy{
+  width: 46%;
+  display: flex;
+  justify-content: center;
+  transition: 1.8s;
+  position: relative;
 }
 .counter{
   position: absolute;
   margin: 0 auto;
   font-size: 60px;
-  color: white;
-  background-color: rgba(0, 0, 0, 0.37);
+  background-color: rgb(34, 40, 52, 0.95);
+  border-radius: 10px;
   padding: 10px;
+  text-align: center;
   z-index: 100;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
 }
 .boards{
   position: relative;
@@ -232,34 +499,25 @@ export default{
   display: flex;
   align-items: center;
 }
-.player-board {
+.board {
   position: absolute;
-  font-size: 50px;
   right: -100%;
   animation-name: rightShow;
-  animation-duration: 6s;
+  animation-duration: 5s;
   animation-timing-function: linear;
   z-index: 100;
-  background-color: black;
-  width: 45%;
+  background-color: rgb(34, 40, 52, 0.95);
+  box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.5);
+  width: 50%;
   height: 80%;
-  color: white;
   padding: 10px;
+  border-radius: 10px 0 0 10px;
 }
-.enemy-board {
-  position: absolute;
-  font-size: 50px;
-  left: -100%;
-  animation: leftShow;
-  animation-duration: 6s;
-  animation-timing-function: linear;
-  z-index: 100;
-  background-color: black;
-  width: 45%;
-  height: 80%;
-  color: white;
-  text-align: end;
-  padding: 10px;
+.board-car-name{
+  font-size: 40px;
+}
+.board-name{
+  font-size: 26px;
 }
 
 @keyframes rightShow{
@@ -267,13 +525,13 @@ export default{
     right: -100%;
   }
   25%{
-    right: 0%;
+    right: -50%;
   }
   50%{
-    right: 0%;
+    right: -50%;
   }
   75%{
-    right: 0%;
+    right: -50%;
   }
   100%{
     right: -100%;
@@ -284,16 +542,24 @@ export default{
     left: -100%;
   }
   25%{
-    left: 0%;
+    left: -50%;
   }
   50%{
-    left: 0%;
+    left: -50%;
   }
   75%{
-    left: 0%;
+    left: -50%;
   }
   100%{
     left: -100%;
+  }
+}
+@keyframes raceStart {
+  0%{
+    margin-bottom: -1000px;
+  }
+  100%{
+    margin-bottom: 0;
   }
 }
 </style>

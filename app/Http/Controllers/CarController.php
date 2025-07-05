@@ -7,6 +7,7 @@ use App\Models\Car;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use App\Models\Part;
+use App\Models\Check_item;
 
 class CarController extends Controller
 {
@@ -14,12 +15,9 @@ class CarController extends Controller
     return Car::with('user')->get()->where('sale', 1);
   }
 
-  public function fuelUp(){
-    
-  }
-
   public function indexGarage(){
-    $cars = Car::select('id','name','img','speed','fuel','power','lvl','color','rare'
+    $cars = Car::select('id','name','img','speed','fuel',
+    'power','lvl','color','rare','fuel_max'
     )->where('user_id', Auth::id())->where('sale', 0)->withCount('parts')->get();
 
     return [$cars, $cars->count()];
@@ -27,7 +25,7 @@ class CarController extends Controller
 
   public function indexRace(){
     $cars = Car::select('id','name','img','speed','fuel','power','lvl','color',
-    'rare','wins','quantity')->where('user_id', Auth::id())->where('sale', 0)->get();
+    'rare','wins','quantity','fuel_max')->where('user_id', Auth::id())->where('sale', 0)->get();
 
     return $cars;
   }
@@ -115,7 +113,7 @@ class CarController extends Controller
     Auth::user()->decrement('balance',$request->price);
 
     $car->increment('rare');
-    $car->increment('fuel',2);
+    $car->increment('fuel_max',2);
   }
 
   public function startRace(Request $request){
@@ -129,9 +127,34 @@ class CarController extends Controller
 
   public function rand(){
     $randCar = Car::inRandomOrder()->whereNot('user_id', Auth::id())
-    ->with('user')->first();
+    ->where('sale',0)->with('user')->first();
 
     return $randCar;
+  }
+
+  public function shop(){
+      return Car::where('sale', 2)->get();
+  }
+
+  public function buyInShop(Request $request){
+    $validations = $request->validate([
+      'id' => ['required', 'integer'],
+      'price' => ['required', 'integer'],
+    ]);
+
+    Auth::user()->decrement('balance', $request->price);
+    
+    $car = Car::find($request->id);
+
+    $newCar = $car->replicate();
+    $newCar->sale = 0;
+    $newCar->user_id = Auth::id();
+    $newCar->save();
+
+    Check_item::create([
+      'car_id' => $request->id,
+      'user_id' => Auth::id()
+    ]);
   }
 
   /*public function store(Request $request)

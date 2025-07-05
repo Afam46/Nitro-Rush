@@ -1,18 +1,52 @@
 <template>
   <article id="products" v-if="parts" style="width: 100%;">
     <article class="product" v-for="part in parts" :key="part.id">
-      <p>{{ part.name }}</p>
-      <img src="../demoimg/part.png" alt="">
+      <p class="market-product-name">{{ part.name }}</p>
+      <div style="width: 100%; height: 100%; margin: 16px 0; min-height: 120px;
+        display: flex; justify-content: center; align-items: center;">
+        <img :src="part.img" alt="" style="width: 50%">
+      </div>
       <div class="info">
-        <p>{{ part.price }}</p>
+        <div class="price-car-market">
+          <div class="price-text">
+            Цена:
+          </div>
+          <div class="price-kybok-market">
+            <p>{{ part.price }}</p>
+            <div class="kybok-market">
+              <img src="../img/kybok.png" alt="">
+            </div>
+          </div>
+        </div>
         <p class="lvl">{{ parseInt(part.lvl) }} ур.</p>
       </div>
-      <p>Продавец: {{ part.user.name }}</p>
-      <button v-if="car.user_id === user_ID" class="orange-btn" @click="returnCar(car.id)">Снять c продажи</button>
+      <div class="atributes-market">
+        <div class="atribute-market">
+          <div class="speed-bg-car">
+            <img src="../img/speed.png" alt="">
+          </div>
+          <p>+{{ part.speed }}</p>
+        </div>
+        <div class="atribute-market">
+          <div class="fuel-bg-car">
+            <img src="../img/fuel.png" alt="">
+          </div>
+          <p>+{{ part.fuel }}</p>
+        </div>
+        <div class="atribute-market">
+          <div class="power-bg-car">
+            <img src="../img/power.png" alt="">
+          </div>
+          <p>+{{ part.power }}</p>
+        </div>
+      </div>
+      <p class="seller">Продавец: {{ part.user.name }}</p>
+      <button v-if="part.user_id === user_ID" class="orange-btn btn-market"
+      @click="returnPart(part.id)">Снять c продажи</button>
       <div v-else style="width: 100%;">
-        <button v-if="balance >= car.price" class="orange-btn" 
-        @click="buy(car.id,car.price)">Купить</button>
-        <button v-else class="disabled">Купить</button>
+        <button v-if="balance >= part.price" class="orange-btn btn-market" 
+        @click="buy(part.id,part.price)">Купить</button>
+        <button v-else class="disabled btn-market">Купить</button>
       </div>
     </article>
   </article>

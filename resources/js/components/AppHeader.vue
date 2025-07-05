@@ -14,7 +14,12 @@
       </ul>
     </nav>
     <div>
-      <p>Кубков: <span class="balance"></span></p>
+      <div class="balance-block">
+        <span class="balance">0</span>
+        <div class="kybok">
+          <img src="./pages/img/kybok.png" alt="">
+        </div>
+      </div>
     </div>
   </header>
 </template>
@@ -37,6 +42,30 @@ header{
   display: flex;
   justify-content: center;
   width: 100%;
+}
+.balance-block{
+  margin-top: 10px;
+  display: flex;
+  align-items: stretch;
+}
+.balance{
+  box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
+  border-radius: 10px 0 0 10px;
+  padding: 6px;
+  align-self: stretch;
+}
+.kybok{
+  box-shadow: 0 0 10px rgba(0,0,0,0.4);
+  background: linear-gradient(to bottom right, #353F54, #222834);
+  border-radius: 0 10px 10px 0;
+  display: flex;
+  width: 40px;
+  justify-content: center;
+  align-items: center;
+  align-self: stretch;
+}
+.kybok img{
+  width: 80%;
 }
 nav{
   width: 20%;

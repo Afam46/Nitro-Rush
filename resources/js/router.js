@@ -40,12 +40,13 @@ const routes = [
         component: Races,
     },
     {
-        path: '/raceGame/:raceId/:carId',
+        path: '/raceGame',
         name: 'raceGame',
         component: RaceGame,
+        meta: { requiresAuth: true }
     },
     {
-        path: '/preparation/:id',
+        path: '/preparation',
         name: 'prep',
         component: Preparation,
     }

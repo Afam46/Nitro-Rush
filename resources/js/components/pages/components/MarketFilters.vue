@@ -4,7 +4,7 @@
     @click="doActive(); activeFilterId = 0">Тачки</button>
 
     <button class="filter" :disabled="activeFilterId === 1"
-    @click="doActive(); activeFilterId = 1" >Запчасти</button>
+    @click="doActive(); activeFilterId = 1" >Моды</button>
   </div>
 </template>
 
@@ -33,7 +33,8 @@ export default{
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: rgb(202, 202, 202);
+  background-color: #222834;
+  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.4);
   border-radius: 10px;
 }
 .filter{
@@ -44,8 +45,9 @@ export default{
   transition: .2s;
 }
 .active-filter{
-  background-color: orangered;
+  background: linear-gradient(to bottom right, #37B6E9, #4B4CED);
   color: white;
   cursor: default;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
 }
 </style>

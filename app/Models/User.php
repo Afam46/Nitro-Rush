@@ -10,6 +10,7 @@ use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use App\Models\Car;
 use App\Models\Part;
+use App\Models\Gear;
 
 class User extends Authenticatable
 {

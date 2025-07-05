@@ -2,12 +2,28 @@
   <main id="race" v-if="races">
     <article id="races" v-for="race in races" :key="race.id">
       <article class="race">
-        <img src="#" alt="img">
-        <p>{{ race.name }}</p>
-        <p>Минимальный уровень авто: {{ race.min_lvl }}</p>
-        <p>{{ race.price }}л</p>
-        <p>{{`Награда: ${Math.round(race.prize/5)} - ${race.prize} кубков`}}</p>
-        <router-link class="orange-btn" :to="{name: 'prep',params: {id:race.id}}">
+        <p style="margin-top: 10px;">{{ race.name }}</p>
+        <div style="width: 100%; display: flex; justify-content:
+        center; align-items: center; padding: 20px 0;">
+          <img :src="race.img" alt="img" style="width: 80%; box-shadow:  0 0 20px rgba(0,0,0,.5);">
+        </div>
+        <div class="race-info">
+          <div class="fuel-bg-race">
+            <p style="margin-right: 10px;">Затрата: {{ race.price }}</p>
+            <img src="./img/fuel.png">
+          </div>
+          <div class="lvl">
+            <p>{{ race.min_lvl }} ур.</p>
+          </div>
+        </div>
+        <div class="prize-race">
+          <p>{{`Награда: ${Math.round(race.prize/5)} - ${race.prize}`}}</p>
+          <div class="kybok-race">
+            <img src="./img/kybok.png" alt="">
+          </div>
+        </div>
+        <router-link class="orange-btn" 
+        :to="{path: '/preparation', query: {id: race.id}}">
           Начать</router-link>
       </article>
     </article>
@@ -45,7 +61,7 @@ export default{
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 20%;
+  width: 30%;
 }
 .race{
   padding: 10px;
@@ -56,6 +72,46 @@ export default{
   flex-direction: column;
   margin-top: 40px;
   border-radius: 10px;
-  box-shadow: 0px 0px 30px rgb(65, 65, 65);;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+}
+.race-info{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  margin: 10px 0;
+}
+.fuel-bg-race{
+  background: linear-gradient(to bottom right, #353F54, #222834);
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+  border: 1px solid #4B4CED;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 6px;
+  margin-left: 10px;
+}
+.prize-race{
+  border-radius: 10px;
+  border: 1px solid #4B4CED;
+  background: linear-gradient(to bottom right, #353F54, #222834);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+  padding: 8px;
+  margin: 10px 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50%;
+}
+.kybok-race{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-left: 10px;
+  width: 18%;
+}
+.kybok-race img{
+  width: 100%;
 }
 </style>

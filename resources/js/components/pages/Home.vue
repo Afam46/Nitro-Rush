@@ -44,7 +44,7 @@ export default{
 <style>
 #garage{
   flex-grow: 1;
-  width: 20%;
+  width: 30%;
   display: flex;
   justify-content: center;
   align-items: center;

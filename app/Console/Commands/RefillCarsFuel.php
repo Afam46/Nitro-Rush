@@ -1,8 +1,8 @@
 <?php
 
 namespace App\Console\Commands;
-
 use Illuminate\Console\Command;
+use App\Models\Car;
 
 class RefillCarsFuel extends Command
 {
@@ -25,6 +25,14 @@ class RefillCarsFuel extends Command
      */
     public function handle()
     {
-        $cars = Car::all()->where('sale',0);
+        $cars = Car::all();
+
+        foreach($cars as $car){
+            if($car->fuel < $car->fuel_max){
+                $car->increment('fuel');
+            }
+        }
+
+        $this->info('Топливо в машинах успешно обновлено');
     }
 }
