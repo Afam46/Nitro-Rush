@@ -127,7 +127,7 @@ export default{
   flex-direction: column;
   margin-bottom: 80px;
   width: 75%;
-  margin: 40px auto;
+  margin: 0 auto;
 }
 .level{
   background: linear-gradient(to bottom right, #37B6E9, #4B4CED);
@@ -219,7 +219,7 @@ export default{
   padding: 4px;
 }
 .fuel-bg img{
-  width: 75%;
+  width: 70%;
 }
 .mod-bg{
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
@@ -233,7 +233,7 @@ export default{
   padding: 4px;
 }
 .mod-bg img{
-  width: 88%;
+  width: 80%;
 }
 .car-gar-name{
   margin-top: 10px;

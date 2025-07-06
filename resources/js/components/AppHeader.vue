@@ -1,8 +1,10 @@
 <template>
   <header>
-    <nav class="menu">
-      <input type="checkbox" id="burger-checkbox" class="burger-checkbox">
-      <label for="burger-checkbox" class="burger"></label>
+    <div class="header-container">
+    <button @click="nice = true" style="cursor: pointer;">
+      <img src="./pages/img/icon_menu.png" alt="">
+    </button>
+    <nav class="menu" v-if="nice">
       <ul class="menu-list">
           <li><router-link :to="{name: 'races'}">Гонки</router-link></li>
           <li><router-link :to="{name: 'home'}">Гараж</router-link></li>
@@ -21,11 +23,17 @@
         </div>
       </div>
     </div>
+    </div>
   </header>
 </template>
 
 <script>
 export default{
+  data(){
+    return{
+      nice: false
+    }
+  },
   methods:{
     logout(){
       axios.post('/logout').then(res => {
@@ -39,12 +47,20 @@ export default{
 
 <style>
 header{
+  padding-top: 20px;
+  margin-bottom: 30px;
   display: flex;
   justify-content: center;
+  align-items: center;
   width: 100%;
 }
+.header-container{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 25%;
+}
 .balance-block{
-  margin-top: 10px;
   display: flex;
   align-items: stretch;
 }
@@ -75,86 +91,5 @@ nav a{
   padding: 10px;
   color: white;
   font-size: 18px;
-}
-nav a:hover:not(.active){
-  text-decoration:underline solid 1px white;
-}
-.active{
-  border: solid 2px rgb(0, 0, 0);
-  cursor: default;
-}
-.burger-checkbox {
-  position: absolute;
-  visibility: hidden;
-}
-.burger {
-  position: relative;
-  z-index: 30;
-  cursor: pointer;
-  display: block;
-  position: relative;
-  border: none;
-  background: transparent;
-  width: 40px;
-  height: 26px;
-}
-.burger::before,
-.burger::after {
-  content: '';
-  left: 0;
-  position: absolute;
-  display: block;
-  width: 100%;
-  height: 4px;
-  border-radius: 10px;
-  background: #000;
-}
-.burger::before {
-  top: 0;
-  box-shadow: 0 11px 0 #000;
-  transition: box-shadow .3s .15s, top .3s .15s, transform .3s;
-}
-.burger::after {
-  bottom: 0;
-  transition: bottom .3s .15s, transform .3s;
-}
-.burger-checkbox:checked + .burger::before {
-  top: 11px;
-  transform: rotate(45deg);
-  box-shadow: 0 6px 0 rgba(0,0,0,0);
-  transition: box-shadow .15s, top .3s, transform .3s .15s;
-}
-.burger-checkbox:checked + .burger::after {
-  bottom: 11px;
-  transform: rotate(-45deg);
-  transition: bottom .3s, transform .3s .15s;
-}
-.menu-list {
-  top: 0;
-  position: absolute;
-  display: grid;
-  gap: 12px;
-  padding: 42px 0;
-  margin: 0;
-  background: rgb(87, 87, 87);
-  list-style-type: none;
-  transform: translateX(-200%);
-  z-index: 20;
-  transition: .3s;
-  width: 200px;
-}
-.menu-item {
-  display: block;
-  padding: 8px;
-  color: white;
-  font-size: 18px;
-  text-align: center;
-  text-decoration: none;
-}
-.menu-item:hover {
-  background: rgba(255,255,255,.2)
-}
-.burger-checkbox:checked ~ .menu-list {
-  transform: translateY(0);
 }
 </style>

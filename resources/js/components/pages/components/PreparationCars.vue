@@ -1,6 +1,6 @@
 <template>
   <div v-if="cars && race" style="width: 100%">
-    <p style="text-align: center; margin: 20px 0 -30px 0;
+    <p style="text-align: center; margin-bottom: 10px;
     font-size: 20px;">Выберите тачку</p>
     <article class="car" v-for="car in cars" :key="car.id">
       <p class="car-gar-name">{{ car.name }}</p>

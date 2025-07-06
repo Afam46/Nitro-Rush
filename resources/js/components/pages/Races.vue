@@ -70,7 +70,6 @@ export default{
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  margin-top: 40px;
   border-radius: 10px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
 }

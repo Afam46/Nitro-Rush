@@ -227,7 +227,7 @@ export default{
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  margin: 30px auto;
+  margin: 0 auto;
 }
 .items {
   display: flex;
