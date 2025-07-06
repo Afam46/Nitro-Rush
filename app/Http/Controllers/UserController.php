@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\UpdateCar;
+use App\Events\UpdatePart;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
@@ -24,6 +26,8 @@ class UserController extends Controller
         Auth::user()->increment('balance', $request->price);
     }
     public function sellPlayer(Request $request){
+        UpdateCar::dispatch();
+
         $validations = $request->validate([
             'id' => ['required'],
             'price' =>  ['required'],
@@ -46,6 +50,8 @@ class UserController extends Controller
     }
 
     public function sellPlayerPart(Request $request){
+        UpdatePart::dispatch();
+
         $validations = $request->validate([
             'id' => ['required'],
             'price' =>  ['required'],

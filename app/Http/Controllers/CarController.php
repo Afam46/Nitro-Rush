@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\UpdateCar;
 use Illuminate\Http\Request;
 use App\Models\Car;
 use Illuminate\Support\Facades\Auth;
@@ -31,6 +32,8 @@ class CarController extends Controller
   }
 
   public function returnCar(Request $request){
+    UpdateCar::dispatch();
+
     $validations = $request->validate([
       'id' =>  ['required','integer']
     ]);
@@ -41,6 +44,8 @@ class CarController extends Controller
   }
 
    public function sell(Request $request){
+    UpdateCar::dispatch();
+
     $validations = $request->validate([
       'id' =>  ['required','integer'],
       'price' => ['required', 'integer']

@@ -78,6 +78,9 @@ export default{
   mounted(){
     this.getCars();
     this.getUser();
+    window.Echo.channel('update-car').listen('UpdateCar', () => {
+      this.getCars();
+    });
   },
   methods:{
     getCars(){

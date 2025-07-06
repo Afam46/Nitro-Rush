@@ -68,6 +68,9 @@ export default{
   mounted(){
     this.getParts();
     this.getUser();
+    window.Echo.channel('update-part').listen('UpdatePart', () => {
+      this.getParts();
+    });
   },
   methods:{
     getParts(){

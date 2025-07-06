@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Events\UpdatePart;
 use App\Models\Car;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
@@ -43,13 +44,15 @@ class PartController extends Controller
     }
 
     public function returnPart(Request $request){
-        $validations = $request->validate([
-          'id' =>  ['required','integer']
-        ]);
+      UpdatePart::dispatch();
 
-        Part::where('id', $request->id)->update([
-            'sale' => 0
-        ]);
+      $validations = $request->validate([
+        'id' =>  ['required','integer']
+      ]);
+
+      Part::where('id', $request->id)->update([
+          'sale' => 0
+      ]);
     }
 
     public function equip(Request $request){
@@ -94,26 +97,28 @@ class PartController extends Controller
     }
 
     public function sell(Request $request){
-        $validations = $request->validate([
-          'id' =>  ['required','integer'],
-          'price' =>  ['required','integer']
+      UpdatePart::dispatch();
+
+      $validations = $request->validate([
+        'id' =>  ['required','integer'],
+        'price' =>  ['required','integer']
+      ]);
+
+      $part = Part::find($request->id);
+
+      if($part->user->id === Auth::id()){  
+        $part->update([
+          'sale' => 1,
+          'price' => $request->price
         ]);
-
-        $part = Part::find($request->id);
-
-        if($part->user->id === Auth::id()){  
-          $part->update([
-            'sale' => 1,
-            'price' => $request->price
-          ]);
-        }
+      }
     }
 
     public function rand(){
-        $randPart = Part::inRandomOrder()->where('user_id', null)
-        ->where('car_id', null)->first();
+      $randPart = Part::inRandomOrder()->where('user_id', null)
+      ->where('car_id', null)->first();
 
-        return $randPart;
+      return $randPart;
     }
 
     public function fallingOut(Request $request){
