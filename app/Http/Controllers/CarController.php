@@ -13,7 +13,7 @@ use App\Models\Check_item;
 class CarController extends Controller
 {
   public function index(){
-    return Car::with('user')->get()->where('sale', 1);
+    return Car::with('user')->where('sale', 1)->orderBy('updated_at', 'desc')->get();
   }
 
   public function indexGarage(){

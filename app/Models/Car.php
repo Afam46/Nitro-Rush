@@ -21,7 +21,6 @@ class Car extends Model
     }
 
     protected $fillable = ['name', 'price', 'img','speed','fuel',
-    'power','user_id','lvl','color','rare','sale','fuel_max'];
-
-    public $timestamps = false;
+    'power','user_id','lvl','color','rare','sale','fuel_max','updated_at',
+    'created_at'];
 }

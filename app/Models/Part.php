@@ -19,7 +19,6 @@ class Part extends Model
     }
 
     protected $fillable = ['name', 'price', 'img','speed',
-    'power','user_id','car_id','lvl','sale','fuel'];
-
-    public $timestamps = false;
+    'power','user_id','car_id','lvl','sale','fuel','updated_at',
+    'created_at'];
 }

@@ -13,7 +13,8 @@ use App\Models\Check_item;
 class PartController extends Controller
 {
     public function index(){
-        return Part::with('user')->get()->where('sale', 1);
+        return Part::with('user')->where('sale', 1)
+        ->orderBy('updated_at', 'desc')->get();
     }
 
     public function indexGarage(){
