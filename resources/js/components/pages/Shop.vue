@@ -44,7 +44,10 @@
       <div class="main-items" v-if="checkParts">
         <div class="main-item" v-for="part in parts" :key="part.id">
           <p class="product-name-part">{{ part.name }}</p>
-          <img src="./img/blue_car.png" alt="">
+          <div style="width: 100%; height: 100%;
+          display: flex; justify-content: center; align-items: center;">
+            <img :src="part.img" alt="" style="width: 66%">
+          </div>
           <div class="info" style="width: 100%; margin: 10px auto;">
             <div class="price-car-market" style="width: 100%">
               <div class="price-kybok-market" style="border-radius: 10px 0 0 10px;">
@@ -57,10 +60,6 @@
             <div class="price-lvl-shop">
               <div class="lvl" style="border-radius: 0 10px 10px 0;">{{ part.lvl }} ур.</div>
             </div>
-          </div>
-          <div style="width: 100%; height: 100%;
-          display: flex; justify-content: center; align-items: center;">
-            <img :src="part.img" alt="" style="width: 66%">
           </div>
           <AtributesMarketParts :item="part"/>
           <div v-if="

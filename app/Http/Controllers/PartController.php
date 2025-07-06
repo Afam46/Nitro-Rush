@@ -99,10 +99,14 @@ class PartController extends Controller
           'price' =>  ['required','integer']
         ]);
 
-        Part::where('id',$request->id)->update([
+        $part = Part::find($request->id);
+
+        if($part->user->id === Auth::id()){  
+          $part->update([
             'sale' => 1,
             'price' => $request->price
-        ]);
+          ]);
+        }
     }
 
     public function rand(){

@@ -46,10 +46,14 @@ class CarController extends Controller
       'price' => ['required', 'integer']
     ]);
 
-    Car::where('id',$request->id)->update([
+    $car = Car::find($request->id);
+
+    if($car->user->id === Auth::id()){  
+      $car->update([
         'sale' => 1,
         'price' => $request->price
-    ]);
+      ]);
+    }
   }
 
   public function store(Request $request){

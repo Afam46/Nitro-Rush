@@ -27,12 +27,14 @@ export default{
       modalPartSell.close();
       document.body.style.overflow = 'visible';
       document.querySelector('#what').className = ''
+      this.$emit('cdSell');
     },
     clickOnModal(event){
       if(event.target === event.currentTarget){
         modalPartSell.close();
         document.body.style.overflow = 'visible';
         document.querySelector('#what').className = ''
+        this.$emit('cdSell');
       }
     },
     sell(){
@@ -41,6 +43,7 @@ export default{
       }
       const partId = parseInt(document.querySelector('#what').className)
       axios.post('/api/parts/sell',{id: partId, price: this.price});
+      this.$emit('sellNa', partId);
       document.querySelector('#what').className = ''
       document.body.style.overflow = 'visible';
       modalPartSell.close();

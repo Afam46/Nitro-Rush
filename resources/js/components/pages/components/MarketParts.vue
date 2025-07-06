@@ -44,7 +44,8 @@
       <button v-if="part.user_id === user_ID" class="orange-btn btn-market"
       @click="returnPart(part.id)">Снять c продажи</button>
       <div v-else style="width: 100%;">
-        <button v-if="balance >= part.price" class="orange-btn btn-market" 
+        <button v-if="balance >= part.price && cd !== part.id"
+        class="orange-btn btn-market" 
         @click="buy(part.id,part.price)">Купить</button>
         <button v-else class="disabled btn-market">Купить</button>
       </div>
@@ -61,6 +62,7 @@ export default{
         parts: null,
         balance: null,
         user_ID: null,
+        cd: null,
       }
   },
   mounted(){
@@ -71,6 +73,7 @@ export default{
     getParts(){
       axios.get('/api/parts').then(res => {
         this.parts = res.data;
+        this.cd = null;
       })
     },
     getUser(){
@@ -81,6 +84,7 @@ export default{
     },
     buy(partId, partPrice){
       if(this.balance >= partPrice){
+        this.cd = partId;
         axios.post('/api/user/sellPlayerPart',{
           id: partId,
           price: partPrice,

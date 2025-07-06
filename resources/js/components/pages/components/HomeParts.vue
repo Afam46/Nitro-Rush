@@ -1,6 +1,7 @@
 <template>
   <div id="divna" style="width: 100%" v-if="parts">
-    <ModalParts @getParts="getParts"/>
+    <ModalParts @getParts="getParts" @cdSell="cdSell = null" 
+    @sellNa="sellNa"/>
     <dialog id="modalParts" class="modal" @click="clickOnModal" style="
     box-shadow: inset 0 0 10px rgb(0, 0, 0, 0.4); min-width: 52%;">
       <div class="modal-inner" v-if="car" style="border: none;">
@@ -45,8 +46,9 @@
                 class="disabled" disabled>Недостаточный уровень</button>
                 <button v-else-if="car.parts_count >= car.rare"
                 class="disabled" disabled>Недостаточно места</button>
-                <button v-else-if="cd" class="orange-btn" 
+                <button v-else-if="cd && cdSell !== part.id" class="orange-btn" 
                 @click="equip(part.id, part.lvl), part.car_id = car.id">Экипировать</button>
+                <button v-else class="disabled">Экипировать</button>
               </div>
               <div v-else-if="part.car_id !== car.id">
                 <button class="disabled" disabled>Экипировано на<br>другой машине</button>
@@ -80,6 +82,7 @@ export default{
       carId: null,
       newPart: parseInt(localStorage.getItem('newPart')),
       cd: 1,
+      cdSell: null,
     }
   },
   mounted(){
@@ -106,6 +109,7 @@ export default{
       modalPartSell.showModal();
       document.body.style.overflow = 'hidden';
       document.querySelector('#what').classList.add(partId);
+      this.cdSell = partId;
     },
     equip(id, lvl){
       if(this.car.lvl >= lvl){
@@ -149,6 +153,9 @@ export default{
         localStorage.removeItem('newPart');
         this.newPart = -1;
       }
+    },
+    sellNa(partId){
+      this.cdSell = partId;
     }
   }
 }

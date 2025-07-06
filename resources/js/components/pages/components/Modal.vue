@@ -26,12 +26,14 @@ export default{
       modal.close();
       document.body.style.overflow = 'visible';
       document.body.className = ''
+      this.$emit('cdSell');
     },
     clickOnModal(event){
       if(event.target === event.currentTarget){
         modal.close();
         document.body.style.overflow = 'visible';
         document.body.className = ''
+        this.$emit('cdSell');
       }
     },
     sell(){
@@ -39,6 +41,7 @@ export default{
         this.price = 8000000;
       }
       const carId = parseInt(document.body.className)
+      this.$emit('sellNa', carId);
       axios.post('/api/cars/sell',{id: carId, price: this.price});
       document.body.className = ''
       document.body.style.overflow = 'visible';

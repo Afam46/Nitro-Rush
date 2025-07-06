@@ -1,8 +1,14 @@
 <template>
   <div v-if="cars" style="width: 100%">
-  <Modal @getCars="getCars"/>
+  <Modal @getCars="getCars" @cdSell="cdSell = -1" @sellNa="sellNa"/>
   <article class="car" v-for="car in cars" :key="car.id">
-    <button class="orange-btn" @click="modalPartsShow(car.id)">Экипировать</button>
+    <button class="orange-btn" @click="modalPartsShow(car.id)"
+    v-if="cdSell !== car.id">
+      Экипировать
+    </button>
+    <button v-else class="disabled">
+      Экипировать
+    </button>
     <p class="car-gar-name">{{ car.name }}</p>
     <div style="width: 40%; rotate: 90deg">
       <div style="position: relative; width: 100%">
@@ -68,7 +74,9 @@ export default{
     return{
       prices: [200,500,2000,5000],
       balance: 0,
-      rareNames: ['Обычный','Редкий','Эпический','Легендарный']
+      rareNames: ['Обычный','Редкий','Эпический','Легендарный'],
+      cdSell: true,
+      cd: true,
     }
   },
   mounted(){
@@ -85,6 +93,7 @@ export default{
     },
     modalShow(carId){
       modal.showModal();
+      this.cdSell = carId;
       document.body.style.overflow = 'hidden'
       document.body.classList.add(`${carId}`)
     },
@@ -92,14 +101,19 @@ export default{
       this.$emit('clickOnEquip', id);
     },
     levelUp(carId, price, rare){
-      if(this.balance >= price){
+      if(this.balance >= price && this.cd){
+        this.cd = false;
         axios.post('/api/cars/levelUp', {id: carId, price: price}).then(res => {
           const balanceText = document.querySelector('.balance');
           balanceText.textContent = parseInt(balanceText.textContent) - price;
           this.balance -= price;
           this.getCars();
+          this.cd = true;
         });
       }
+    },
+    sellNa(carId){
+      this.cdSell = carId;
     }
   }
 }
