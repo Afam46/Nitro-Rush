@@ -7,15 +7,17 @@
   <body>
     <AppHeader/>
     <router-view></router-view>
+    <AppFooter/>
   </body>
 </template>
 
 <script>
 import axios from 'axios';
 import AppHeader from './AppHeader.vue';
+import AppFooter from './AppFooter.vue';
 
 export default{
-  components: {AppHeader},
+  components: {AppHeader, AppFooter},
   mounted(){
     this.getBalance();
   },

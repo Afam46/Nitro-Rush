@@ -4,8 +4,8 @@
     <button @click="nice = true" style="cursor: pointer;">
       <img src="./pages/img/icon_menu.png" alt="">
     </button>
-    <nav class="menu" v-if="nice">
-      <ul class="menu-list">
+    <nav v-if="nice">
+      <ul>
           <li><router-link :to="{name: 'races'}">Гонки</router-link></li>
           <li><router-link :to="{name: 'home'}">Гараж</router-link></li>
           <li><router-link :to="{name: 'market'}">Рынок</router-link></li>
@@ -45,7 +45,7 @@ export default{
 }
 </script>
 
-<style>
+<style scoped>
 header{
   padding-top: 20px;
   margin-bottom: 30px;
@@ -89,7 +89,6 @@ nav{
 }
 nav a{
   padding: 10px;
-  color: white;
   font-size: 18px;
 }
 </style>
