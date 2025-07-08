@@ -116,6 +116,22 @@
         </div>
       </div>
     </article>
+    <div class="buttons-shop">
+      <button class="orange-btn" style="display: flex; justify-content: center;
+      align-items: center; width: 45%;" @click="modalShow">
+        <p>Купить</p><img src="./img/kybok.png" alt=""
+        style="width: 15%; margin-left: 5px;">
+      </button>
+      <button class="orange-btn" style="width: 50%;">
+          <p>Заправить все машины</p>
+          <div style="display: flex; justify-content: center;
+          align-items: center;">
+            за 10<img src="./img/kybok.png" alt=""
+            style="width: 15%; margin-left: 5px;">
+          </div>
+      </button>
+      <ModalDonat/>
+    </div>
   </main>
 </template>
 
@@ -123,9 +139,10 @@
 import AtributesMarketCars from './components/AtributesMarketCars.vue';
 import axios from 'axios';
 import AtributesMarketParts from './components/AtributesMarketParts.vue';
+import ModalDonat from './components/ModalDonat.vue';
 
 export default{
-  components:{AtributesMarketCars, AtributesMarketParts},
+  components:{AtributesMarketCars, AtributesMarketParts, ModalDonat},
   data(){
     return{
       cars: null,
@@ -215,6 +232,10 @@ export default{
         });
       }
     },
+    modalShow(){
+      modalDonat.showModal();
+      document.body.style.overflow = 'hidden'
+    }
   }
 }
 </script>
@@ -285,5 +306,12 @@ export default{
   box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.4);
   border-radius: 10px;
   padding: 2px;
+}
+.buttons-shop{
+  width: 100%;
+  margin-top: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: stretch;
 }
 </style>

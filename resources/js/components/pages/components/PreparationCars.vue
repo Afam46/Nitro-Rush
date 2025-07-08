@@ -1,6 +1,6 @@
 <template>
-  <div v-if="cars && race" style="width: 100%; margin-bottom: -20px;">
-    <article class="car" v-for="car in cars" :key="car.id" style="margin-bottom: 20px;
+  <div v-if="cars && race" class="car-prep-container">
+    <article class="car-prep" v-for="car in cars" :key="car.id" style="margin-bottom: 20px;
     box-shadow: inset 0 0 10px rgba(0,0,0,0.4); border-radius: 10px;">
       <p class="car-gar-name">{{ car.name }}</p>
       <div style="width: 40%; rotate: 90deg">
@@ -102,5 +102,21 @@ export default{
   margin: 10px 0;
   padding: 20px;
   width: 100%;
+}
+.car-prep{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  width: 75%;
+  margin-bottom: 10px;
+}
+.car-prep-container{
+  width: 100%;
+  margin-bottom: -20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
 }
 </style>

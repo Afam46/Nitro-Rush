@@ -1,62 +1,68 @@
 <template>
-  <div v-if="cars" style="width: 100%">
+  <div v-if="cars" style="width: 100%;">
   <Modal @getCars="getCars" @cdSell="cdSell = -1" @sellNa="sellNa"/>
-  <article class="car" v-for="car in cars" :key="car.id">
-    <button class="orange-btn" @click="modalPartsShow(car.id)"
-    v-if="cdSell !== car.id">
-      Экипировать
-    </button>
-    <button v-else class="disabled">
-      Экипировать
-    </button>
-    <p class="car-gar-name">{{ car.name }}</p>
-    <div style="width: 40%; rotate: 90deg">
-      <div style="position: relative; width: 100%">
-        <img :src="`/storage/img/${(car.name).toLowerCase()}_mask.png`"
-        style="width: 100%;" :style="car.color">
-        <img :src="`/storage/img/${(car.name).toLowerCase()}.png`"
-        style="position: absolute; top: 0; left: 0; width: 100%;">
-      </div>
-    </div>
-    <div class="atributes">
-      <div style="width: 45%;">
-        <div class="atribute">
-          <div class="speed-bg"><img src="../img/speed.png" alt=""></div>
-          <div class="scale">{{ Math.round(car.speed * (car.rare/2)) }}</div>
-        </div>
-        <div class="atribute">
-          <div class="fuel-bg"><img src="../img/fuel.png" alt=""></div>
-          <div class="scale">{{ car.fuel }}/{{ car.fuel_max }}</div>
-        </div>
-        <div class="atribute">
-          <div class="power-bg"><img src="../img/power.png" alt=""></div>
-          <div class="scale">{{ Math.round(car.power * (car.rare/2))}}</div>
-        </div>
-      </div>
-      <div style="margin-top: 10px; width: 50%;">
-        <div class="level">Уровень {{ parseInt(car.lvl) }}</div>
-        <div class="atribute">
-          <div class="mod-bg"><img src="../img/mod.png" alt=""></div>
-          <div class="scale">{{ car.parts_count }}/{{ car.rare }}</div>
-        </div>
-        <button class="rare" :style="`background-color: var(--color${car.rare});`"
-        v-if="car.rare < 5" @click="levelUp(car.id, prices[car.rare-1])">
-          {{ rareNames[car.rare-1] }}<br>{{prices[car.rare-1]}} кубков
+  <div class="slider-container">
+    <div class="slider">
+      <article class="car" v-for="car in cars" :key="car.id">
+        <button class="orange-btn" @click="modalPartsShow(car.id)"
+        v-if="cdSell !== car.id">
+          Экипировать
         </button>
-        <button v-else class="rare" style="background-color: red; cursor: default;">
-          Мифический<br>(макс.)
+        <button v-else class="disabled">
+          Экипировать
         </button>
-      </div>
+        <p class="car-gar-name">{{ car.name }}</p>
+        <div style="width: 40%; rotate: 90deg">
+          <div style="position: relative; width: 100%">
+            <img :src="`/storage/img/${(car.name).toLowerCase()}_mask.png`"
+            style="width: 100%;" :style="car.color">
+            <img :src="`/storage/img/${(car.name).toLowerCase()}.png`"
+            style="position: absolute; top: 0; left: 0; width: 100%;">
+          </div>
+        </div>
+        <div class="atributes">
+          <div style="width: 45%;">
+            <div class="atribute">
+              <div class="speed-bg"><img src="../img/speed.png" alt=""></div>
+              <div class="scale">{{ Math.round(car.speed * (car.rare/2)) }}</div>
+            </div>
+            <div class="atribute">
+              <div class="fuel-bg"><img src="../img/fuel.png" alt=""></div>
+              <div class="scale">{{ car.fuel }}/{{ car.fuel_max }}</div>
+            </div>
+            <div class="atribute">
+              <div class="power-bg"><img src="../img/power.png" alt=""></div>
+              <div class="scale">{{ Math.round(car.power * (car.rare/2))}}</div>
+            </div>
+          </div>
+          <div style="margin-top: 10px; width: 50%;">
+            <div class="level">Уровень {{ parseInt(car.lvl) }}</div>
+            <div class="atribute">
+              <div class="mod-bg"><img src="../img/mod.png" alt=""></div>
+              <div class="scale">{{ car.parts_count }}/{{ car.rare }}</div>
+            </div>
+            <button class="rare" :style="`background-color: var(--color${car.rare});`"
+            v-if="car.rare < 5" @click="levelUp(car.id, prices[car.rare-1])">
+              {{ rareNames[car.rare-1] }}<br>{{prices[car.rare-1]}} кубков
+            </button>
+            <button v-else class="rare" style="background-color: red; cursor: default;">
+              Мифический<br>(макс.)
+            </button>
+          </div>
+        </div>
+        <div style="margin-top: 10px; width: 100%;">
+          <button v-if="carsLenght < 2 || car.parts_count > 0" class="disabled">
+            Выставить на продажу
+          </button>
+          <button v-else class="orange-btn" @click="modalShow(car.id)">
+            Выставить на продажу
+          </button>
+        </div>
+      </article>
     </div>
-    <div style="margin-top: 10px; width: 100%;">
-      <button v-if="carsLenght < 2 || car.parts_count > 0" class="disabled">
-        Выставить на продажу
-      </button>
-      <button v-else class="orange-btn" @click="modalShow(car.id)">
-        Выставить на продажу
-      </button>
-    </div>
-  </article>
+    <button v-if="carsLenght > 1" class="prev" @click="$emit('prev')">❮</button>
+    <button v-if="carsLenght > 1" class="next" @click="$emit('next')">❯</button>
+  </div>
   </div>
 </template>
 
@@ -104,7 +110,7 @@ export default{
           const balanceText = document.querySelector('.balance');
           balanceText.textContent = parseInt(balanceText.textContent) - price;
           this.balance -= price;
-          this.getCars();
+          this.$emit('getCarsAfterEquip');
           this.cd = true;
         });
       }
@@ -117,13 +123,42 @@ export default{
 </script>
 
 <style>
-.car{
+.slider-container {
+  position: relative;
+  overflow: hidden;
+}
+.slider {
   display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.prev, .next{
+  position: absolute;
+  top: 50%;
+  translate: 0 -50%;
+  background: linear-gradient(to bottom right, #37B6E9, #4B4CED);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+  border-radius: 10px;
+  color: #fff;
+  border: none;
+  font-size: 30px;
+  padding: 10px;
+  z-index: 10;
+  cursor: pointer;
+}
+.prev {
+  left: 10px;
+}
+.next {
+  right: 10px;
+}
+.car{
   justify-content: center;
   align-items: center;
   flex-direction: column;
   width: 75%;
-  margin: 0 auto;
+  display: none;
+  margin-bottom: 10px;
 }
 .level{
   background: linear-gradient(to bottom right, #37B6E9, #4B4CED);
@@ -157,7 +192,7 @@ export default{
   display: flex;
   justify-content: space-between;
   width: 100%;
-  margin-top: -20px;
+  margin-top: -25px;
 }
 .atribute{
   display: flex;
@@ -234,7 +269,7 @@ export default{
 }
 .car-gar-name{
   margin-top: 10px;
-  margin-bottom: -20px;
+  margin-bottom: -25px;
   font-size: 20px;
 }
 </style>
