@@ -105,14 +105,12 @@ export default{
         }).then(res => {
           const text = document.querySelector('.balance').textContent
           document.querySelector('.balance').textContent = parseInt(text) - carPrice;
-          this.getCars();
           this.getUser();
         });
       }
     },
     returnCar(carId){
       axios.post('/api/cars/returnCar',{id: carId});
-      this.getCars();
     }
   }
 }

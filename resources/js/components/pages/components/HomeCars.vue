@@ -48,12 +48,9 @@
         </button>
       </div>
     </div>
-    <div style="margin: 10px 0; width: 100%;">
-      <button v-if="car.parts_count > 0" class="disabled" style="margin-top: 10px;">
-        Сначала нужно снять всю экипировку
-      </button>
-      <button v-else-if="carsLenght < 2" class="disabled">
-        Нужно минимум 2 тачки для продажи
+    <div style="margin-top: 10px; width: 100%;">
+      <button v-if="carsLenght < 2 || car.parts_count > 0" class="disabled">
+        Выставить на продажу
       </button>
       <button v-else class="orange-btn" @click="modalShow(car.id)">
         Выставить на продажу
@@ -125,7 +122,6 @@ export default{
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  margin-bottom: 80px;
   width: 75%;
   margin: 0 auto;
 }
@@ -161,6 +157,7 @@ export default{
   display: flex;
   justify-content: space-between;
   width: 100%;
+  margin-top: -20px;
 }
 .atribute{
   display: flex;
@@ -237,6 +234,7 @@ export default{
 }
 .car-gar-name{
   margin-top: 10px;
+  margin-bottom: -20px;
   font-size: 20px;
 }
 </style>

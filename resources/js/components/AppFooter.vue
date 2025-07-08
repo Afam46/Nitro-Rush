@@ -39,7 +39,7 @@ export default{
   justify-content: center;
   align-items: center;
   width: 100%;
-  position: sticky;
+  position: fixed;
   bottom: 0;
 }
 .footer-container{

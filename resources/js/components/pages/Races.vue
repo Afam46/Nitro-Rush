@@ -67,6 +67,7 @@ export default{
 .race{
   padding: 10px;
   width: 90%;
+  margin-bottom: 20px;
   display: flex;
   justify-content: center;
   align-items: center;

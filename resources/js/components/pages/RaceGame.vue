@@ -399,11 +399,12 @@ export default{
   }
 }
 #game{
-  flex-grow: 1;
   width: 30%;
+  height: 75svh;
   display: flex;
   justify-content: center;
   align-items: center;
+  position: relative;
   margin: 0 auto;
 }
 #road-game{
@@ -412,8 +413,9 @@ export default{
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 30%;
-  height: 75svh;
+  width: 100%;
+  height: 100%;
+  top: 20px;
   background-size: cover;
   background-repeat: repeat-x;
   animation-fill-mode: forwards;
@@ -495,7 +497,7 @@ export default{
   position: relative;
   overflow: hidden;
   width: 100%;
-  height: 60%;
+  height: 100%;
   display: flex;
   align-items: center;
 }

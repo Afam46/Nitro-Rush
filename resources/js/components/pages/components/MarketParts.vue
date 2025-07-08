@@ -95,14 +95,12 @@ export default{
         }).then(res => {
           const text = document.querySelector('.balance').textContent
           document.querySelector('.balance').textContent = parseInt(text) - partPrice;
-          this.getParts();
           this.getUser();
         });
       }
     },
     returnPart(partId){
       axios.post('/api/parts/returnPart',{id: partId});
-      this.getParts();
     }
   }
 }

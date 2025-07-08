@@ -1,10 +1,8 @@
 <template>
-  <div v-if="cars && race" style="width: 100%">
-    <p style="text-align: center; margin-bottom: 10px;
-    font-size: 20px;">Выберите тачку</p>
-    <article class="car" v-for="car in cars" :key="car.id">
+  <div v-if="cars && race" style="width: 100%; margin-bottom: -20px;">
+    <article class="car" v-for="car in cars" :key="car.id" style="margin-bottom: 20px;
+    box-shadow: inset 0 0 10px rgba(0,0,0,0.4); border-radius: 10px;">
       <p class="car-gar-name">{{ car.name }}</p>
-
       <div style="width: 40%; rotate: 90deg">
       <div style="position: relative; width: 100%">
         <img :src="`/storage/img/${(car.name).toLowerCase()}_mask.png`"

@@ -1,19 +1,17 @@
 <template>
-  <header>
+  <header ref="headerRef" :class="{ 'out': isScrolledDown }">
     <div class="header-container">
-    <button @click="nice = true" style="cursor: pointer;">
+    <button @click="showMenu" style="cursor: pointer; border: none; background: transparent;">
       <img src="./pages/img/icon_menu.png" alt="">
     </button>
-    <nav v-if="nice">
-      <ul>
-          <li><router-link :to="{name: 'races'}">Гонки</router-link></li>
-          <li><router-link :to="{name: 'home'}">Гараж</router-link></li>
-          <li><router-link :to="{name: 'market'}">Рынок</router-link></li>
-          <li><router-link :to="{name: 'shop'}">Магазин</router-link></li>
-          <li><router-link :to="{name: 'login'}">Войти</router-link></li>
-          <li><router-link :to="{name: 'register'}">Регистрация</router-link></li>
-          <li><a style="cursor: pointer;" @click.prevent="logout">Выйти</a></li>
-      </ul>
+    <nav class="menu" @click="showMenu">
+      <router-link :to="{name: 'races'}">Гонки</router-link>
+      <router-link :to="{name: 'home'}">Гараж</router-link>
+      <router-link :to="{name: 'market'}">Рынок</router-link>
+      <router-link :to="{name: 'shop'}">Магазин</router-link>
+      <router-link :to="{name: 'login'}">Войти</router-link>
+      <router-link :to="{name: 'register'}">Регистрация</router-link>
+      <a style="cursor: pointer;" @click.prevent="logout">Выйти</a>
     </nav>
     <div>
       <div class="balance-block">
@@ -31,8 +29,16 @@
 export default{
   data(){
     return{
-      nice: false
+      open: false,
+      isScrolledDown: false,
+      scrollPrev: 0
     }
+  },
+  mounted() {
+    window.addEventListener('scroll', () => this.handleScroll())
+  },
+  beforeDestroy() {
+    window.removeEventListener('scroll', () => this.handleScroll())
   },
   methods:{
     logout(){
@@ -41,24 +47,73 @@ export default{
         this.$router.push({name: 'login'})
       })
     },
-  }
+    showMenu(){
+      if(this.open){
+        document.querySelector('.menu').style.top = '-120svh';
+        this.open = false;
+      }else{
+        document.querySelector('.menu').style.top = 0;
+        this.open = true;
+      }
+    },
+    handleScroll() {
+      const scrolled = window.scrollY
+      if (scrolled > 36 && scrolled > this.scrollPrev) {
+        this.isScrolledDown = true
+      } else {
+        this.isScrolledDown = false
+      }
+      this.scrollPrev = scrolled
+    }
+  },
 }
 </script>
 
 <style scoped>
 header{
-  padding-top: 20px;
-  margin-bottom: 30px;
+  margin-bottom: 10px;
   display: flex;
   justify-content: center;
   align-items: center;
   width: 100%;
+  position: sticky;
+  top: 0;
+  transition: transform 0.3s ease;
+  z-index: 1000;
+}
+.out {
+  transform: translateY(-100%);
 }
 .header-container{
   display: flex;
   justify-content: space-between;
   align-items: center;
   width: 25%;
+  position: relative;
+  background: linear-gradient(to bottom left, #363E51, #181C24);
+  padding: 10px 20px;
+  border-radius: 0 0 30px 30px;
+  border-bottom: solid 2px #4B4CED;
+}
+.menu{
+  top: -120svh;
+  position: absolute;
+  transition: .6s;
+  background: linear-gradient(to top left, #353F54, #222834);
+  border-radius: 20px;
+  z-index: 1200;
+  width: 80%;
+  height: 100svh;
+  right: 0;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: -40px 0 100px rgba(0,0,0,0.8);
+}
+.menu a{
+  box-shadow: 0 0 10px rgba(0,0,0,0.4);
+  margin-bottom: 20px;
+  border-radius: 10px;
 }
 .balance-block{
   display: flex;
