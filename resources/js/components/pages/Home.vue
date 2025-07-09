@@ -1,5 +1,5 @@
 <template>
-  <main id="garage">
+  <main>
     <HomeParts :car="car" @getCars="getCarsAfterEquip"/>
     <HomeCars @clickOnEquip="equipCarId" :cars="cars" :carsLenght="carsLenght"
     @getCars="getCars" @prev="prev" @next="next"
@@ -75,15 +75,3 @@ export default{
   }
 }
 </script>
-
-<style>
-#garage{
-  flex-grow: 1;
-  width: 30%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  margin: 0 auto;
-}
-</style>

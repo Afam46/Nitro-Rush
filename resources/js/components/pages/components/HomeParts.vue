@@ -5,7 +5,7 @@
     <dialog id="modalParts" class="modal" @click="clickOnModal" style="
     box-shadow: inset 0 0 10px rgb(0, 0, 0, 0.4); min-width: 52%;">
       <div class="modal-inner" v-if="car" style="border: none;">
-        <p style="font-size: 20px; margin-bottom: 10px;">
+        <p style="font-size: 20px; margin-bottom: 10px; text-align: center;">
           Выберите запчасти для {{ car.name }}:
         </p>
         <button class="orange-btn" style="margin: 10px 0; width: 50%;"
@@ -162,6 +162,44 @@ export default{
 </script>
 
 <style scoped>
+@media screen and (max-width: 880px) {
+  .orange-btn, .disabled{
+    font-size: 16px;
+  }
+}
+@media screen and (min-width: 840px) {
+  .part{
+    width: 31%;
+  }
+}
+@media screen and (max-width: 840px) {
+  .part{
+    width: 45%;
+  }
+}
+@media screen and (max-width: 600px) {
+  .part{
+    width: 90%;
+  }
+}
+@media screen and (min-width: 400px) {
+  #modalParts{
+    width: 80%;
+  }
+}
+@media screen and (max-width: 400px) {
+  #modalParts{
+    width: 90%;
+  }
+  .part{
+    width: 100%;
+  }
+}
+@media screen and (max-width: 330px) {
+  .orange-btn, .disabled, .atribute-market{
+    font-size: 14px;
+  }
+}
 .parts{
   display: flex;
   flex-wrap: wrap;
@@ -172,7 +210,6 @@ export default{
   border-radius: 10px;
   padding: 10px;
   margin: 5px 5px;
-  width: 31%;
   box-shadow: 0 0 20px rgb(0, 0, 0, 0.4);
 }
 .img-block{

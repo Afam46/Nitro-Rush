@@ -13,9 +13,9 @@ import router from '../router';
 export default{
   components: {AppHeader, AppFooter},
   mounted(){
-    window.addEventListener('load', function() {
-      router.push('/');
-    }),
+    //window.addEventListener('load', function() {
+    //  router.push('/');
+    //}),
     this.getBalance();
   },
   methods:{
@@ -68,5 +68,63 @@ body{
 *::-webkit-scrollbar-thumb {
   background-color: #4B4CED;
   border-radius: 5px;
+}
+main{
+  flex-grow: 1;
+  width: 30%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  margin: 0 auto;
+}
+@media screen and (max-width: 1250px) {
+  main{
+    width: 40%;
+  }
+}
+@media screen and (max-width: 1000px) {
+  main{
+    width: 50%;
+  }
+}
+@media screen and (max-width: 750px) {
+  main{
+    width: 62%;
+  }
+}
+@media screen and (max-width: 600px) {
+  main{
+    width: 70%;
+  }
+}
+@media screen and (max-width: 525px) {
+  main{
+    width: 80%;
+  }
+  .atributes{
+    font-size: 16px;
+  }
+}
+@media screen and (max-width: 460px) {
+  main{
+    width: 100%;
+  }
+  .prev {
+    left: 5px;
+  }
+  .next {
+    right: 5px;
+  }
+}
+@media screen and (max-width: 370px) {
+  .fuel-bg, .speed-bg, .power-bg, .level, .mod-bg, .rare{
+    height: 50px;
+  }
+}
+@media screen and (max-width: 340px) {
+  .atributes{
+    font-size: 13px;
+  }
 }
 </style>

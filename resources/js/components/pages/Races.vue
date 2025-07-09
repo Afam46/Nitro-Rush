@@ -1,5 +1,5 @@
 <template>
-  <main id="race" v-if="races">
+  <main v-if="races">
     <article id="races" v-for="race in races" :key="race.id">
       <article class="race">
         <p style="margin-top: 10px;">{{ race.name }}</p>
@@ -51,22 +51,15 @@ export default{
 </script>
 
 <style>
-#race{
-  flex-grow: 1;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-}
 #races{
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 30%;
+  width: 100%;
 }
 .race{
   padding: 10px;
-  width: 90%;
+  width: 100%;
   margin-bottom: 20px;
   display: flex;
   justify-content: center;
@@ -93,6 +86,16 @@ export default{
   padding: 6px;
   margin-left: 10px;
 }
+@media screen and (max-width: 450px) {
+  .fuel-bg-race, .prize-race{
+    font-size: 16px;
+  }
+}
+@media screen and (max-width: 330px) {
+  .fuel-bg-race, .prize-race{
+    font-size: 14px;
+  }
+}
 .prize-race{
   border-radius: 10px;
   border: 1px solid #4B4CED;
@@ -103,7 +106,7 @@ export default{
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 50%;
+  width: 60%;
 }
 .kybok-race{
   display: flex;

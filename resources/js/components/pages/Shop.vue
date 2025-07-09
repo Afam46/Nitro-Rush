@@ -1,5 +1,5 @@
 <template>
-  <main id="shop" v-if="cars && parts && checkCars">
+  <main v-if="cars && parts && checkCars">
     <article class="items">
       <div class="item">
         <div style="width: 60%;">
@@ -12,7 +12,7 @@
           </div>
         </div>
         <div class="info">
-          <div class="price-car-market" style="width: 40%">
+          <div class="price-car-market" style="width: 50%">
             <div class="price-text">
               Цена:
             </div>
@@ -57,8 +57,9 @@
                 </div>
               </div>
             </div>
-            <div class="price-lvl-shop">
-              <div class="lvl" style="border-radius: 0 10px 10px 0;">{{ part.lvl }} ур.</div>
+            <div class="price-lvl-shop" style="width: 100%;">
+              <div class="lvl" style="border-radius: 0 10px 10px 0;
+              width: 100%">{{ part.lvl }} ур.</div>
             </div>
           </div>
           <AtributesMarketParts :item="part"/>
@@ -86,7 +87,7 @@
           </div>
         </div>
         <div class="info">
-          <div class="price-car-market" style="width: 40%">
+          <div class="price-car-market" style="width: 50%">
             <div class="price-text">
               Цена:
             </div>
@@ -122,16 +123,25 @@
         <p>Купить</p><img src="./img/kybok.png" alt=""
         style="width: 15%; margin-left: 5px;">
       </button>
-      <button class="orange-btn" style="width: 50%;">
-          <p>Заправить все машины</p>
+      <button class="orange-btn" style="width: 50%;" @click="fuelUpAll"
+      v-if="balance >= 10">
+          <p>Заправить тачки</p>
           <div style="display: flex; justify-content: center;
           align-items: center;">
             за 10<img src="./img/kybok.png" alt=""
             style="width: 15%; margin-left: 5px;">
           </div>
       </button>
-      <ModalDonat/>
+      <button class="disabled" style="width: 50%;" v-else>
+          <p>Заправить тачки</p>
+          <div style="display: flex; justify-content: center;
+          align-items: center;">
+            за 10<img src="./img/kybok.png" alt=""
+            style="width: 15%; margin-left: 5px;">
+          </div>
+      </button>
     </div>
+    <ModalDonat/>
   </main>
 </template>
 
@@ -235,20 +245,38 @@ export default{
     modalShow(){
       modalDonat.showModal();
       document.body.style.overflow = 'hidden'
+    },
+    fuelUpAll(){
+      if(this.balance >= 10){
+        axios.post('/api/cars/fuelUpAll').then(res => {
+          const text = document.querySelector('.balance').textContent
+          document.querySelector('.balance').textContent = parseInt(text) - 10;
+          console.log(res.data)
+        });
+      }
     }
   }
 }
 </script>
 
 <style>
-#shop{
-  flex-grow: 1;
-  width: 36%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  margin: 0 auto;
+@media screen and (max-width: 1310px) {
+  .lvl, .price-kybok-market, .product-name-part, .atribute-market-part{
+    font-size: 14px;
+  }
+}
+@media screen and (max-width: 560px) {
+  .speed-bg-car, .power-bg-car, .fuel-bg-car{
+    height: 30px;
+  }
+  .btn-shop{
+    font-size: 14px;
+  }
+}
+@media screen and (max-width: 320px) {
+  .lvl, .product-name-part, .atribute-market-part{
+    font-size: 12px;
+  }
 }
 .items {
   display: flex;

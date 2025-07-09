@@ -14,30 +14,30 @@
       
       <div class="statas"
       :style="car.lvl < race.min_lvl ? '':'border: 1px solid #4B4CED'">
-        <p>Всего игр: {{ car.quantity }}</p>
-        <p>Побед: {{ car.wins }}</p>
-        <p>Проигрышей: {{ car.quantity - car.wins }}</p>
-        <p>Процент побед: {{car.quantity > 0 ?
+        <p class="statas-text">Всего игр: {{ car.quantity }}</p>
+        <p class="statas-text">Побед: {{ car.wins }}</p>
+        <p class="statas-text">Проигрышей: {{ car.quantity - car.wins }}</p>
+        <p class="statas-text">Процент побед: {{car.quantity > 0 ?
         Math.round((car.wins/car.quantity).toFixed(2) * 100) + '%'
         : 100 + '%'}}</p>
-        <div class="atributes-market" style="margin-top: 20px">
+        <div class="atributes-market" style="margin-top: 20px;">
         <div class="atribute-market">
           <div class="speed-bg-car">
             <img src="../img/speed.png" alt="" style="width: 90%">
           </div>
-          <p>{{ Math.round(car.speed * (car.rare/2)) }}</p>
+          <p class="statas-text">{{ Math.round(car.speed * (car.rare/2)) }}</p>
         </div>
         <div class="atribute-market">
           <div class="fuel-bg-car">
             <img src="../img/fuel.png" alt="">
           </div>
-          <p>{{ car.fuel }}/{{ car.fuel_max }}</p>
+          <p class="statas-text">{{ car.fuel }}/{{ car.fuel_max }}</p>
         </div>
         <div class="atribute-market">
           <div class="power-bg-car">
             <img src="../img/power.png" alt="" style="width: 90%">
           </div>
-          <p>{{ Math.round(car.power * (car.rare/2)) }}</p>
+          <p class="statas-text">{{ Math.round(car.power * (car.rare/2)) }}</p>
         </div>
       </div>
       </div>
@@ -95,7 +95,7 @@ export default{
 }
 </script>
 
-<style>
+<style scoped>
 .statas{
   border-radius: 10px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
@@ -103,12 +103,22 @@ export default{
   padding: 20px;
   width: 100%;
 }
+@media screen and (max-width: 450px) {
+  .statas-text{
+    font-size: 14px;
+  }
+}
+@media screen and (max-width: 370px) {
+  .statas-text{
+    font-size: 12px;
+  }
+}
 .car-prep{
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  width: 75%;
+  width: 80%;
   margin-bottom: 10px;
 }
 .car-prep-container{

@@ -146,4 +146,35 @@ nav a{
   padding: 10px;
   font-size: 18px;
 }
+
+@media screen and (max-width: 1250px) {
+  .header-container{
+    width: 35%;
+  }
+}
+@media screen and (max-width: 1000px) {
+  .header-container{
+    width: 45%;
+  }
+}
+@media screen and (max-width: 750px) {
+  .header-container{
+    width: 55%;
+  }
+}
+@media screen and (max-width: 600px) {
+  .header-container{
+    width: 65%;
+  }
+}
+@media screen and (max-width: 520px) {
+  .header-container{
+    width: 100%;
+  }
+}
+@media screen and (max-width: 430px) {
+  .header-container{
+    width: 100%;
+  }
+}
 </style>

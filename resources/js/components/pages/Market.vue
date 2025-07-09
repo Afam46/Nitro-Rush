@@ -1,5 +1,5 @@
 <template>
-  <main id="market">
+  <main>
     <MarketFilters @filter="showProducts"/>
     <MarketCars v-show="show === 0"/>
     <MarketParts v-show="show === 1"/>
@@ -29,15 +29,3 @@ export default{
   }
 }
 </script>
-
-<style>
-#market{
-  flex-grow: 1;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  width: 30%;
-  margin: 0 auto;
-}
-</style>

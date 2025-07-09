@@ -147,10 +147,12 @@ export default{
   cursor: pointer;
 }
 .prev {
-  left: 10px;
+  left: 0;
+  top: 33%;
 }
 .next {
-  right: 10px;
+  right: 0;
+  top: 33%;
 }
 .car{
   justify-content: center;
@@ -159,6 +161,7 @@ export default{
   width: 75%;
   display: none;
   margin-bottom: 10px;
+  font-size: 18px;
 }
 .level{
   background: linear-gradient(to bottom right, #37B6E9, #4B4CED);
@@ -170,7 +173,6 @@ export default{
   justify-content: center;
   align-items: center;
   padding: 10px;
-  font-size: 18px;
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.4);
 }
 .rare{
@@ -182,7 +184,6 @@ export default{
   border: none;
   color: white;
   padding: 10px;
-  font-size: 18px;
   cursor: pointer;
   height: 60px;
   width: 100%;
@@ -196,7 +197,6 @@ export default{
 }
 .atribute{
   display: flex;
-  font-size: 18px;
   align-items: stretch;
   margin-top: 10px;
   border-radius: 10px;

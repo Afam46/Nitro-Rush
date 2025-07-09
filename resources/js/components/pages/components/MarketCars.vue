@@ -1,5 +1,5 @@
 <template>
-  <article id="products" v-if="cars" style="width: 100%;">
+  <article id="products" v-if="cars">
     <article class="product" v-for="car in cars" :key="car.id">
       <p class="market-product-name">{{ car.name }}</p>
       
@@ -121,7 +121,8 @@ export default{
   display: flex;
   justify-content: center;
   align-items: center;
-  flex-wrap: wrap;
+  flex-direction: column;
+  width: 100%;
 }
 .product img{
   width: 80%;
@@ -159,6 +160,16 @@ export default{
   padding: 10px 0;
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.4);
 }
+@media screen and (max-width: 450px) {
+  .orange-btn, .disabled, .atribute-market{
+    font-size: 16px;
+  }
+}
+@media screen and (max-width: 330px) {
+  .orange-btn, .disabled, .atribute-market{
+    font-size: 14px;
+  }
+}
 .info{
   margin: 20px 0;
   display: flex;
@@ -168,13 +179,27 @@ export default{
 .lvl{
   background: linear-gradient(to bottom right, #37B6E9, #4B4CED);
   color: white;
-  font-size: 18px;
   display: flex;
   justify-content: center;
   align-items: center;
   padding: 4px 8px;
   border-radius: 10px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+}
+@media screen and (max-width: 1310px) {
+  .lvl{
+    font-size: 14px;
+  }
+}
+@media screen and (max-width: 520px) {
+  .product{
+    width: 85%;
+  }
+}
+@media screen and (max-width: 320px) {
+  .lvl{
+    font-size: 10px;
+  }
 }
 .rare-scale{
   height: 7px;
