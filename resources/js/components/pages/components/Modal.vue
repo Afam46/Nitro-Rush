@@ -1,7 +1,7 @@
 <template>
-  <dialog id="modal" style="height: 60%;" class="modal" @click="clickOnModal">
+  <dialog id="modal" style="height: 50%;" class="modal" @click="clickOnModal">
     <div class="modal-inner">
-      <p>За какую цену вы хотели бы продать свое авто?</p>
+      <p style="text-align: center;">За какую цену вы хотели бы продать свое авто?</p>
       <input type="number" class="price-input" required v-model="price">
       <div class="buttons">
         <button class="btn" @click="modalClose">Отмена</button>
@@ -53,6 +53,24 @@ export default{
 </script>
 
 <style>
+@media screen and (min-width: 920px) {
+  .price-input{
+    padding: 5px;
+    font-size: 20px;
+  }
+}
+@media screen and (max-width: 920px) {
+  .price-input{
+    font-size: 18px;
+    padding: 3px;
+  }
+}
+@media screen and (max-width: 750px) {
+  .price-input{
+    font-size: 16px;
+    padding: 0;
+  }
+}
 .modal{
   border: none;
   padding: 0;
@@ -84,12 +102,10 @@ export default{
   margin-top: 15px;
   background-color: white;
   color: black;
-  padding: 5px;
-  font-size: 20px;
 }
 .buttons{
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   width: 55%;
   margin: 0 auto;
 }
@@ -101,7 +117,7 @@ export default{
   font-size: 20px;
   padding: 5px 10px;
   cursor: pointer;
-  margin-top: 15px;
+  margin: 15px 7px;
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.4);
 }
 .btn-dis{
@@ -112,7 +128,7 @@ export default{
   font-size: 20px;
   padding: 5px 10px;
   cursor: default;
-  margin-top: 15px;
+  margin: 15px 7px;
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.4);
 }
 </style>

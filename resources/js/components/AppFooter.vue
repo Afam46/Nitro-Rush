@@ -41,6 +41,7 @@ export default{
   width: 100%;
   position: fixed;
   bottom: 0;
+  z-index: 1000;
 }
 .footer-container{
   width: 25%;
@@ -75,5 +76,41 @@ nav a img{
 }
 .active{
   background: linear-gradient(to bottom right, #37B6E9, #4B4CED);
+}
+@media screen and (max-width: 1250px) {
+  .footer-container{
+    width: 30%;
+  }
+}
+@media screen and (max-width: 1000px) {
+  .footer-container{
+    width: 40%;
+  }
+}
+@media screen and (max-width: 750px) {
+  .footer-container{
+    width: 50%;
+  }
+}
+@media screen and (max-width: 600px) {
+  .footer-container{
+    width: 60%;
+  }
+}
+@media screen and (max-width: 520px) {
+  .footer-container{
+    width: 100%;
+  }
+  nav a{
+    width: 15%;
+  }
+}
+@media screen and (max-width: 440px) {
+  .footer-container{
+    width: 100%;
+  }
+  nav a{
+    width: 18%;
+  }
 }
 </style>

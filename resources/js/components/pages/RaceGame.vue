@@ -399,13 +399,13 @@ export default{
   }
 }
 #game{
-  width: 30%;
-  height: 75svh;
+  height: 100svh;
   display: flex;
   justify-content: center;
   align-items: center;
   position: relative;
   margin: 0 auto;
+  margin-top: -88px;
 }
 #road-game{
   position: absolute;
@@ -493,11 +493,28 @@ export default{
   z-index: 100;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
 }
+.board-car-name{
+  font-size: 40px;
+}
+.board-name{
+  font-size: 26px;
+}
+@media screen and (max-width: 800px) {
+  .counter{
+    font-size: 50px;
+  }
+  .board-car-name{
+    font-size: 32px;
+  }
+  .board-name{
+  font-size: 22px;
+}
+}
 .boards{
   position: relative;
   overflow: hidden;
   width: 100%;
-  height: 100%;
+  height: 60%;
   display: flex;
   align-items: center;
 }
@@ -514,12 +531,6 @@ export default{
   height: 80%;
   padding: 10px;
   border-radius: 10px 0 0 10px;
-}
-.board-car-name{
-  font-size: 40px;
-}
-.board-name{
-  font-size: 26px;
 }
 
 @keyframes rightShow{

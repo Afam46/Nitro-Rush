@@ -1,5 +1,5 @@
 <template>
-  <dialog id="modalRace" class="modal" @click="clickOnModal" style="width: 25%">
+  <dialog id="modalRace" class="modal" @click="clickOnModal">
   <div class="modal-inner">
       <div v-if="isWin" style="width: 100%;">
         <p class="win-race-game">Победа!</p>
@@ -31,7 +31,8 @@
         <p class="win-race-game">Вы проиграли</p>
         <p style="margin-bottom: 5px;">Но не унывайте, у вас еще будет шанс</p>
       </div>
-      <router-link :to="{name:'races'}" class="btn">Сыграть еще</router-link>
+      <router-link :to="{name:'races'}" class="btn" style="margin-bottom: 0;"
+      >Сыграть еще</router-link>
       <router-link :to="{name:'home'}" class="btn">Домой</router-link>
     </div>
   </dialog>
@@ -44,6 +45,36 @@ export default{
 </script>
 
 <style>
+@media screen and (min-width: 1225px) {
+  #modalRace{
+    width: 25%
+  }
+}
+@media screen and (max-width: 1225px) {
+  #modalRace{
+    width: 35%
+  }
+}
+@media screen and (max-width: 880px) {
+  #modalRace{
+    width: 50%
+  }
+}
+@media screen and (max-width: 570px) {
+  #modalRace{
+    width: 70%
+  }
+}
+@media screen and (max-width: 460px) {
+  #modalRace{
+    width: 90%
+  }
+}
+@media screen and (max-width: 340px) {
+  .btn{
+    font-size: 16px;
+  }
+}
 .win-race-game{
   text-align: center;
   margin-bottom: 10px;

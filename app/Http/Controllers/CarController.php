@@ -166,6 +166,19 @@ class CarController extends Controller
     ]);
   }
 
+  public function fuelUpAll(){
+    $user = Auth::user();
+    $cars = $user->cars->where('sale', 0);
+
+    foreach($cars as $car){
+      if($car->fuel < $car->fuel_max){
+        $car->increment('fuel');
+      }
+    }
+
+    $user->decrement('balance', 10);
+  }
+
   /*public function store(Request $request)
   {   
       $validations = $request->validate([

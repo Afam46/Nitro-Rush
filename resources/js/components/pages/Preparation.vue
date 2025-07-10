@@ -1,5 +1,5 @@
 <template>
-  <main id="garage">
+  <main>
     <PreparationCars/>
   </main>
 </template>

@@ -30,6 +30,7 @@ Route::prefix('cars')->controller(CarController::class)
     Route::get('/rand','rand');
     Route::get('/shop','shop');
     Route::post('/buyInShop','buyInShop');
+    Route::post('/fuelUpAll','fuelUpAll');
 });
 
 Route::prefix('user')->controller(UserController::class)
