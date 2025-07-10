@@ -77,7 +77,7 @@ class UpdateShop extends Command
 
         $names = ['Aurora','Desert Hawk','Neon Flash','Phantom Racer','Prism',
         'Stormrider','Thunderbolt','Vortex','Wildfire','Cyclop','Eclipse X',
-        'Phoenix','Quantum','Shadow','Storm',
+        'Phoenix','Quantum','Shadow','Storm','Titanium','Nightshade'
         ];
 
         Car::create([
