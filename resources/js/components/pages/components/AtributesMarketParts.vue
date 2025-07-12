@@ -2,19 +2,19 @@
   <div class="atributes-market-parts">
     <div class="atribute-market-part">
       <div class="speed-bg-car" style="width:40%;">
-        <img src="../img/speed.png" alt="" style="width:80%;">
+        <img src="../img/speed.png" alt="">
       </div>
       <p>+{{ item.speed }}</p>
     </div>
     <div class="atribute-market-part">
       <div class="fuel-bg-car" style="width:40%;">
-        <img src="../img/fuel.png" alt="" style="width:55%;">
+        <img src="../img/fuel.png" alt="">
       </div>
       <p>+{{ item.fuel }}</p>
     </div>
     <div class="atribute-market-part" >
       <div class="power-bg-car" style="width:40%;">
-        <img src="../img/power.png" alt="" style="width:75%;">
+        <img src="../img/power.png" alt="">
       </div>
       <p>+{{ item.power }}</p>
     </div>

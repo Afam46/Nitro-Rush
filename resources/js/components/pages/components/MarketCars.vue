@@ -54,7 +54,7 @@
       <button v-if="car.user_id === user_ID" class="orange-btn btn-market"
       @click="returnCar(car.id)">Снять c продажи</button>
       <div v-else style="width: 100%;">
-        <button v-if="balance >= car.price && cd !== car.id"
+        <button v-if="balance >= car.price && !cd"
         class="orange-btn btn-market" 
         @click="buy(car.id,car.price)">Купить</button>
         <button v-else class="disabled btn-market">Купить</button>
@@ -72,7 +72,7 @@ export default{
         cars: null,
         balance: null,
         user_ID: null,
-        cd: null,
+        cd: false,
       }
   },
   mounted(){
@@ -80,31 +80,33 @@ export default{
     this.getUser();
     window.Echo.channel('update-car').listen('UpdateCar', () => {
       this.getCars();
+      this.getUser();
     });
   },
   methods:{
     getCars(){
       axios.get('/api/cars').then(res => {
         this.cars = res.data;
-        this.cd = null;
+        this.cd = false;
       })
     },
     getUser(){
       axios.get('/api/user').then(res => {
         this.balance = res.data.balance;
         this.user_ID = res.data.id;
+        document.querySelector('.balance').textContent = this.balance;
       });
     },
     buy(carId, carPrice){
       if(this.balance >= carPrice){
-        this.cd = carId;
+        this.cd = true;
         axios.post('/api/user/sellPlayer',{
           id: carId,
           price: carPrice,
           user_id: this.user_ID
         }).then(res => {
-          const text = document.querySelector('.balance').textContent
-          document.querySelector('.balance').textContent = parseInt(text) - carPrice;
+          this.balance -= carPrice;
+          document.querySelector('.balance').textContent = this.balance;
           this.getUser();
         });
       }
@@ -220,6 +222,16 @@ export default{
   box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.4);
   border-radius: 10px;
 }
+@media screen and (min-width: 520px) {
+  .fuel-bg-car img, .speed-bg-car img, .power-bg-car img{
+    width: 75%;
+  }
+}
+@media screen and (max-width: 520px) {
+  .fuel-bg-car img, .speed-bg-car img, .power-bg-car img{
+    width: 62%;
+  }
+}
 .atribute-market:nth-child(2){
   margin: 0 10px 0 10px;
 }
@@ -242,9 +254,6 @@ export default{
   justify-content: center;
   align-items: center;
   padding: 4px;
-}
-.fuel-bg-car img{
-  width: 55%;
 }
 .power-bg-car {
   background-color:#353F54;

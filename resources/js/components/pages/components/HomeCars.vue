@@ -222,9 +222,6 @@ export default{
   align-items: center;
   padding: 4px;
 }
-.power-bg img{
-  width: 90%;
-}
 .speed-bg{
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
   width: 80%;
@@ -235,9 +232,6 @@ export default{
   justify-content: center;
   align-items: center;
   padding: 4px;
-}
-.speed-bg img{
-  width: 90%;
 }
 .fuel-bg{
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
@@ -250,8 +244,8 @@ export default{
   align-items: center;
   padding: 4px;
 }
-.fuel-bg img{
-  width: 70%;
+.fuel-bg img, .power-bg img, .speed-bg img{
+  width: 90%;
 }
 .mod-bg{
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);

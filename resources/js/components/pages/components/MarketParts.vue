@@ -44,7 +44,7 @@
       <button v-if="part.user_id === user_ID" class="orange-btn btn-market"
       @click="returnPart(part.id)">Снять c продажи</button>
       <div v-else style="width: 100%;">
-        <button v-if="balance >= part.price && cd !== part.id"
+        <button v-if="balance >= part.price && !cd"
         class="orange-btn btn-market" 
         @click="buy(part.id,part.price)">Купить</button>
         <button v-else class="disabled btn-market">Купить</button>
@@ -62,7 +62,7 @@ export default{
         parts: null,
         balance: null,
         user_ID: null,
-        cd: null,
+        cd: false,
       }
   },
   mounted(){
@@ -70,31 +70,33 @@ export default{
     this.getUser();
     window.Echo.channel('update-part').listen('UpdatePart', () => {
       this.getParts();
+      this.getUser();
     });
   },
   methods:{
     getParts(){
       axios.get('/api/parts').then(res => {
         this.parts = res.data;
-        this.cd = null;
+        this.cd = false;
       })
     },
     getUser(){
       axios.get('/api/user').then(res => {
         this.balance = res.data.balance;
         this.user_ID = res.data.id;
+        document.querySelector('.balance').textContent = this.balance;
       });
     },
     buy(partId, partPrice){
       if(this.balance >= partPrice){
-        this.cd = partId;
+        this.cd = true;
         axios.post('/api/user/sellPlayerPart',{
           id: partId,
           price: partPrice,
           user_id: this.user_ID
         }).then(res => {
-          const text = document.querySelector('.balance').textContent
-          document.querySelector('.balance').textContent = parseInt(text) - partPrice;
+          this.balance -= partPrice;
+          document.querySelector('.balance').textContent = this.balance;
           this.getUser();
         });
       }

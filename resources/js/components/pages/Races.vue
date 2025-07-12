@@ -9,7 +9,7 @@
         </div>
         <div class="race-info">
           <div class="fuel-bg-race">
-            <p style="margin-right: 10px;">Затрата: {{ race.price }}</p>
+            <p style="margin-right: 3px;">Затрата: {{ race.price }}</p>
             <img src="./img/fuel.png">
           </div>
           <div class="lvl">
@@ -19,7 +19,7 @@
         <div class="prize-race">
           <p>{{`Награда: ${Math.round(race.prize/5)} - ${race.prize}`}}</p>
           <div class="kybok-race">
-            <img src="./img/kybok.png" alt="">
+            <img src="./img/kybok.png" alt="" style="width: 70%;">
           </div>
         </div>
         <router-link class="orange-btn" 
@@ -83,7 +83,7 @@ export default{
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 6px;
+  padding: 10px;
   margin-left: 10px;
 }
 @media screen and (max-width: 450px) {
@@ -112,7 +112,7 @@ export default{
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-left: 10px;
+  margin-left: 4px;
   width: 18%;
 }
 .kybok-race img{

@@ -23,19 +23,19 @@
         <div class="atributes-market" style="margin-top: 20px;">
         <div class="atribute-market">
           <div class="speed-bg-car">
-            <img src="../img/speed.png" alt="" style="width: 90%">
+            <img src="../img/speed.png" alt="" style="width: 75%">
           </div>
           <p class="statas-text">{{ Math.round(car.speed * (car.rare/2)) }}</p>
         </div>
         <div class="atribute-market">
           <div class="fuel-bg-car">
-            <img src="../img/fuel.png" alt="">
+            <img src="../img/fuel.png" alt="" style="width: 75%">
           </div>
           <p class="statas-text">{{ car.fuel }}/{{ car.fuel_max }}</p>
         </div>
         <div class="atribute-market">
           <div class="power-bg-car">
-            <img src="../img/power.png" alt="" style="width: 90%">
+            <img src="../img/power.png" alt="" style="width: 75%">
           </div>
           <p class="statas-text">{{ Math.round(car.power * (car.rare/2)) }}</p>
         </div>
