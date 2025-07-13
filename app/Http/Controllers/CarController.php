@@ -9,24 +9,31 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use App\Models\Part;
 use App\Models\Check_item;
+use Illuminate\Support\Facades\Cache;
 
 class CarController extends Controller
 {
   public function index(){
-    return Car::with('user')->where('sale', 1)->orderBy('updated_at', 'desc')->get();
+    //$cars = Cache::remember('market:cars', 60*2, function(){
+    //  return Car::with('user')->where('sale', 1)->orderBy('updated_at', 'desc')->get();
+    //});
+
+    return Car::where('sale', 1)->with('user')->orderBy('updated_at', 'desc')->get();
   }
 
   public function indexGarage(){
     $cars = Car::select('id','name','img','speed','fuel',
     'power','lvl','color','rare','fuel_max'
-    )->where('user_id', Auth::id())->where('sale', 0)->withCount('parts')->get();
+    )->where('user_id', Auth::id())->where('sale', 0)->orderBy('lvl', 'desc')
+    ->withCount('parts')->get();
 
     return [$cars, $cars->count()];
   }
 
   public function indexRace(){
     $cars = Car::select('id','name','img','speed','fuel','power','lvl','color',
-    'rare','wins','quantity','fuel_max')->where('user_id', Auth::id())->where('sale', 0)->get();
+    'rare','wins','quantity','fuel_max')->where('user_id', Auth::id())
+    ->orderBy('lvl', 'desc')->where('sale', 0)->get();
 
     return $cars;
   }
@@ -37,6 +44,15 @@ class CarController extends Controller
     $validations = $request->validate([
       'id' =>  ['required','integer']
     ]);
+
+    //$cars = Cache::get('market:cars', collect([]));
+    //$carId = $request->id;
+
+    //$updatedCars = $cars->reject(function($car) use($carId){
+    //  return $car->id == $carId;
+    //});
+
+    //Cache::put('market:cars', $updatedCars, 60*2);
 
     Car::where('id', $request->id)->update([
         'sale' => 0
@@ -53,11 +69,14 @@ class CarController extends Controller
 
     $car = Car::find($request->id);
 
-    if($car->user->id === Auth::id()){  
+    if($car->user->id === Auth::id()){ 
       $car->update([
         'sale' => 1,
         'price' => $request->price
       ]);
+      //$cars = Cache::get('market:cars', []);
+      //$cars = collect($cars)->prepend($car)->all();
+      //Cache::put('market:cars', $cars, 60*2);
     }
   }
 
@@ -142,7 +161,11 @@ class CarController extends Controller
   }
 
   public function shop(){
+    $cars = Cache::remember('shop:cars', 60*2, function(){
       return Car::where('sale', 2)->get();
+    });
+
+    return $cars;
   }
 
   public function buyInShop(Request $request){

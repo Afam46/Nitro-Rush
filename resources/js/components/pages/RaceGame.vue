@@ -2,8 +2,8 @@
   <audio :src="audioSrc" controls hidden>
     <source :src="audioSrc" type="audio/mp3">
   </audio>
-  <main id="game" v-if="race">
-    <div class="boards" v-if="car && enemyCar">
+  <main id="game" v-if="race && car && enemyCar">
+    <div class="boards">
       <div class="board" style="position: relative;">
         <p class="board-car-name">{{ car.name }}</p>
         <p class="board-name">{{ userName }}</p>
@@ -52,7 +52,7 @@
     <p class="counter" hidden></p>
     <div id="road-game" :style="`background-image: url(${race.img_game});`">
       <div class="enemy">
-        <div class="body-enemy" v-if="enemyCar">
+        <div class="body-enemy">
           <div class="enemy-img-car">
             <img :src="`/storage/img/${(enemyCar.name).toLowerCase()}_mask.png`"
             style="width: 100%;" :style="enemyCar.color">
@@ -62,7 +62,7 @@
         </div>
       </div>
       <div class="player">
-        <div class="body-player" v-if="car">
+        <div class="body-player">
           <div class="player-img-car">
             <img :src="`/storage/img/${(car.name).toLowerCase()}_mask.png`"
             style="width: 100%;" :style="car.color">
@@ -99,7 +99,7 @@ export default{
       userName: null,
       partName: '',
       partImg: '',
-      gameObjects: null,
+      gameObjects: [],
     }
   },
   mounted(){

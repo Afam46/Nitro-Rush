@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use App\Models\Part;
 use App\Models\Check_item;
+use Illuminate\Support\Facades\Cache;
 
 class PartController extends Controller
 {
@@ -138,7 +139,11 @@ class PartController extends Controller
     }
 
     public function shop(){
-        return Part::all()->where('sale', 2);
+      $parts = Cache::remember('shop:parts', 60*2, function(){
+          return Part::all()->where('sale', 2);
+      });
+
+      return $parts;
     }
 
     public function buyInShop(Request $request){
