@@ -11,7 +11,7 @@ class RefillCarsFuel extends Command
      *
      * @var string
      */
-    protected $signature = 'app:refill-cars-fuel';
+    protected $signature = 'app:fuel-up';
 
     /**
      * The console command description.

@@ -20,7 +20,7 @@ class Car extends Model
         return $this->hasMany(Part::class, 'car_id', 'id');
     }
 
-    protected $fillable = ['name', 'price', 'img','speed','fuel',
+    protected $fillable = ['name', 'price','speed','fuel',
     'power','user_id','lvl','color','rare','sale','fuel_max','updated_at',
-    'created_at'];
+    'created_at','quantity', 'wins'];
 }

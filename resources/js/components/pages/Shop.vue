@@ -221,8 +221,8 @@ export default{
           id: carId,
           price: carPrice,
         }).then(res => {
-          const text = document.querySelector('.balance').textContent
-          document.querySelector('.balance').textContent = parseInt(text) - carPrice;
+          this.balance -= carPrice;
+          document.querySelector('.balance').textContent = this.balance;
           this.getBalance();
           this.getCheckCars();
         });
@@ -235,8 +235,8 @@ export default{
           id: partId,
           price: partPrice,
         }).then(res => {
-          const text = document.querySelector('.balance').textContent
-          document.querySelector('.balance').textContent = parseInt(text) - partPrice;
+          this.balance -= partPrice;
+          document.querySelector('.balance').textContent = this.balance;
           this.getBalance();
           this.getCheckParts();
         });
@@ -251,7 +251,6 @@ export default{
         axios.post('/api/cars/fuelUpAll').then(res => {
           const text = document.querySelector('.balance').textContent
           document.querySelector('.balance').textContent = parseInt(text) - 10;
-          console.log(res.data)
         });
       }
     }

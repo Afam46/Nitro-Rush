@@ -42,7 +42,7 @@
               <div class="scale">{{ car.parts_count }}/{{ car.rare }}</div>
             </div>
             <button class="rare" :style="`background-color: var(--color${car.rare});`"
-            v-if="car.rare < 5" @click="levelUp(car.id, prices[car.rare-1])">
+            v-if="car.rare < 5" @click="rareUp(car.id, prices[car.rare-1])">
               {{ rareNames[car.rare-1] }}<br>{{prices[car.rare-1]}} кубков
             </button>
             <button v-else class="rare" style="background-color: red; cursor: default;">
@@ -103,15 +103,16 @@ export default{
     modalPartsShow(id){
       this.$emit('clickOnEquip', id);
     },
-    levelUp(carId, price, rare){
+    rareUp(carId, price){
       if(this.balance >= price && this.cd){
         this.cd = false;
-        axios.post('/api/cars/levelUp', {id: carId, price: price}).then(res => {
-          const balanceText = document.querySelector('.balance');
-          balanceText.textContent = parseInt(balanceText.textContent) - price;
+        axios.post('/api/cars/rareUp', {id: carId, price: price}).then(res => {
           this.balance -= price;
+          document.querySelector('.balance').textContent = this.balance;
           this.$emit('getCarsAfterEquip');
-          this.cd = true;
+          setTimeout(() => {
+            this.cd = true;
+          }, 1000);
         });
       }
     },

@@ -25,7 +25,8 @@ Route::prefix('cars')->controller(CarController::class)
     Route::get('/show/{car}', 'show');
     Route::get('/showRace/{car}', 'showRace');
     Route::post('/win/{car}','win');
-    Route::post('/levelUp', 'levelUp');
+    Route::post('/defeat/{car}','defeat');
+    Route::post('/rareUp', 'rareUp');
     Route::post('/startRace', 'startRace');
     Route::get('/rand','rand');
     Route::get('/shop','shop');

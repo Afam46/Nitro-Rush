@@ -35,8 +35,8 @@ export default{
     },
     getCars(){
       axios.get('/api/cars/garage').then(res => {
-        this.cars = res.data[0];
-        this.carsLenght = res.data[1];
+        this.cars = res.data;
+        this.carsLenght = this.cars.length;
         this.$nextTick(() => {
           this.currentSlide = 0;
           document.querySelectorAll('.car')[this.currentSlide].style.display = 'flex';
@@ -45,8 +45,8 @@ export default{
     },
     getCarsAfterEquip(){
       axios.get('/api/cars/garage').then(res => {
-        this.cars = res.data[0];
-        this.carsLenght = res.data[1];
+        this.cars = res.data;
+        this.carsLenght = this.cars.length;
         this.$nextTick(() => {
           document.querySelectorAll('.car')[this.currentSlide].style.display = 'flex';
         });

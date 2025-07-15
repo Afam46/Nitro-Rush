@@ -6,7 +6,7 @@
     <div class="boards">
       <div class="board" style="position: relative;">
         <p class="board-car-name">{{ car.name }}</p>
-        <p class="board-name">{{ userName }}</p>
+        <p class="board-name">{{ car.user.name }}</p>
         <div class="atributes" style="position: absolute;
         bottom: 20px; left: 20px;">
           <div style="width: 60%;">
@@ -85,7 +85,6 @@ export default{
   data(){
     return{
       audioSrc: audi,
-      userId: null,
       balance: 0,
       prize: 0,
       xp: 0,
@@ -96,14 +95,13 @@ export default{
       race: null,
       enemyCar: null,
       count: null,
-      userName: null,
       partName: '',
       partImg: '',
       gameObjects: [],
     }
   },
   mounted(){
-    this.getUser();
+    this.getBalance();
     this.getCar();
     this.getRace();
     this.getEnemyCar();
@@ -206,14 +204,6 @@ export default{
             objectContainer.style.animationName = 'ObjectShow'
           }
         }
-
-        //let trail = document.querySelector('.trail')
-        //trail.style.opacity = 1;
-
-        //setTimeout(function(){
-        //  trail.style.opacity = 0;
-        //}, 1000);
-
         let y1 = getRand(-200,200);
         let y2 = getRand(-200,200);
 
@@ -275,7 +265,7 @@ export default{
           modalRace.showModal();
         },2000);
 
-        axios.post(`/api/cars/win/${this.car.id}`, {win: this.isWin, xp: this.xp});
+        axios.post(`/api/cars/defeat/${this.car.id}`);
       }else{
         if(getRand(0,101) > 92){
           axios.get('/api/parts/rand').then(res => {
@@ -305,17 +295,15 @@ export default{
           document.querySelector('.balance').textContent = this.balance + this.prize;
         });
 
-        axios.post(`/api/cars/win/${this.car.id}`, {win: this.isWin, xp: this.xp});
+        axios.post(`/api/cars/win/${this.car.id}`, {xp: this.xp});
       }
     },end);
   },
 
   methods:{
-    getUser(){
-      axios.get('/api/user').then(res => {
-        this.balance = res.data.balance;
-        this.userId = res.data.id;
-        this.userName = res.data.name
+    getBalance(){
+      axios.get('/api/user/balance').then(res => {
+        this.balance = res.data;
       });
     },
     getCar(){

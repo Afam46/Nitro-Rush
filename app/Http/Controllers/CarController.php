@@ -10,138 +10,148 @@ use App\Models\User;
 use App\Models\Part;
 use App\Models\Check_item;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 
 class CarController extends Controller
 {
   public function index(){
-    //$cars = Cache::remember('market:cars', 60*2, function(){
-    //  return Car::with('user')->where('sale', 1)->orderBy('updated_at', 'desc')->get();
-    //});
-
-    return Car::where('sale', 1)->with('user')->orderBy('updated_at', 'desc')->get();
-  }
-
-  public function indexGarage(){
-    $cars = Car::select('id','name','img','speed','fuel',
-    'power','lvl','color','rare','fuel_max'
-    )->where('user_id', Auth::id())->where('sale', 0)->orderBy('lvl', 'desc')
-    ->withCount('parts')->get();
-
-    return [$cars, $cars->count()];
-  }
-
-  public function indexRace(){
-    $cars = Car::select('id','name','img','speed','fuel','power','lvl','color',
-    'rare','wins','quantity','fuel_max')->where('user_id', Auth::id())
-    ->orderBy('lvl', 'desc')->where('sale', 0)->get();
+    $cars = Car::where('sale', 1)
+    ->select(['id','name', 'price','speed','power','user_id','lvl',
+    'color','rare','fuel_max'])
+    ->with(['user' => fn($q) => $q->select('id', 'name')])
+    ->orderByDesc('updated_at')
+    ->get();
 
     return $cars;
   }
 
+  public function indexGarage(){
+    $cars = Car::query()
+    ->where('user_id', Auth::id())
+    ->where('sale', 0)
+    ->orderByDesc('lvl')
+    ->select([
+      'id','name','speed','fuel','power','lvl','color','rare','fuel_max'
+    ])
+    ->withCount('parts')
+    ->get();
+    
+    return $cars;
+  }
+
+  public function indexRace(){
+    return Car::query()
+      ->where('user_id', Auth::id())
+      ->where('sale', 0)
+      ->orderByDesc('lvl')
+      ->select([
+          'id','name','speed','fuel','power','lvl','color','rare','wins',
+          'quantity','fuel_max'
+      ])
+      ->get();
+  }
+
   public function returnCar(Request $request){
-    UpdateCar::dispatch();
-
-    $validations = $request->validate([
-      'id' =>  ['required','integer']
+    $validated = $request->validate([
+      'id' => ['required', 'integer', 'exists:cars,id']
     ]);
 
-    //$cars = Cache::get('market:cars', collect([]));
-    //$carId = $request->id;
+    $updated = Car::where('id', $validated['id'])
+      ->where('sale', '!=', 0)
+      ->update(['sale' => 0]);
 
-    //$updatedCars = $cars->reject(function($car) use($carId){
-    //  return $car->id == $carId;
-    //});
-
-    //Cache::put('market:cars', $updatedCars, 60*2);
-
-    Car::where('id', $request->id)->update([
-        'sale' => 0
-    ]);
+    if ($updated) {
+      UpdateCar::dispatch();
+    }
   }
 
    public function sell(Request $request){
-    UpdateCar::dispatch();
-
-    $validations = $request->validate([
-      'id' =>  ['required','integer'],
-      'price' => ['required', 'integer']
+    $validated = $request->validate([
+      'id' => ['required', 'integer', 'exists:cars,id,user_id,'.Auth::id()],
+      'price' => ['required', 'integer', 'min:1', 'max:8000000']
     ]);
 
-    $car = Car::find($request->id);
-
-    if($car->user->id === Auth::id()){ 
-      $car->update([
+    $updated = Car::where('id', $validated['id'])
+      ->where('user_id', Auth::id())
+      ->update([
         'sale' => 1,
-        'price' => $request->price
+        'price' => $validated['price']
       ]);
-      //$cars = Cache::get('market:cars', []);
-      //$cars = collect($cars)->prepend($car)->all();
-      //Cache::put('market:cars', $cars, 60*2);
+      
+    if ($updated) {
+      UpdateCar::dispatch();
     }
   }
 
   public function store(Request $request){
-    $validations = $request->validate([
-        'name' =>  ['required'],
-        'img' =>  ['required'],
-        'speed' =>  ['required', 'integer'],
-        'power' =>  ['required', 'integer'],
-        'color' => ['required'],
+    $validated = $request->validate([
+      'name' => ['required', 'string'],
+      'speed' => ['required', 'integer'],
+      'power' => ['required', 'integer'], 
+      'color' => ['required', 'string'],
     ]);
 
-    Car::create([
-        'name' => $request['name'],
-        'img' => $request['img'],
-        'speed' => $request['speed'],
-        'power' => $request['power'],
-        'color' => $request['color'],
-        'user_id' => Auth::id()
-    ]);
+    $car = Car::create(array_merge(
+        $validated,
+        ['user_id' => Auth::id()]
+    ));
   }
 
-  public function editStats(Request $request){
-    $validations = $request->validate([
-      'id' => ['required', 'integer'],
-      'quantity' =>  ['required', 'integer'],
-      'wins' =>  ['required', 'integer'],
-    ]);
+  //public function editStats(Request $request){
+  //  $validated = $request->validate([
+  //    'id' => ['required', 'integer', 'exists:cars,id,user_id,'.Auth::id()],
+  //    'quantity' => ['required', 'integer'],
+  //    'wins' => ['required', 'integer'],
+  //  ]);
+  //  $updated = Car::where('id', $validated['id'])
+  //    ->where('user_id', Auth::id())
+  //    ->update([
+  //        'quantity' => $validated['quantity'],
+  //        'wins' => $validated['wins']
+  //  ]);
+  //}
 
-    Car::where('id', $request->id)->update([
-      'quantity' => $request['quantity'],
-      'wins' => $request['wins'],
-    ]);
+  public function show(Car $car)
+  {
+    return $car->loadCount('parts');
   }
 
-  public function show(Car $car){
-    return Car::where('id',$car->id)->withCount('parts')->get();
-  }
   public function showRace(Car $car){
-    return $car;
+    return $car->load(['user' => function($query) {
+      $query->select('id', 'name');
+    }]);
   }
 
   public function win(Car $car, Request $request){
-    $validations = $request->validate([
-      'win' =>  ['required', 'integer'],
-      'xp' => ['required'],
+    $validated = $request->validate([
+      'xp' => ['required']
     ]);
-    
+
+    $car->update([
+      'quantity' => $car->quantity + 1,
+      'wins' => $car->wins + 1,
+      'lvl' => $car->lvl + $validated['xp']
+    ]);
+  }
+  
+  public function defeat(Car $car){
     $car->increment('quantity');
-    $car->increment('lvl', $request->xp);
-    $car->increment('wins', $request->win);
   }
 
-  public function levelUp(Request $request){
-    $validations = $request->validate([
-      'id' => ['required', 'integer'],
-      'price' =>  ['required', 'integer'],
+  public function rareUp(Request $request){
+     $validated = $request->validate([
+        'id' => ['required', 'integer', 'exists:cars,id'],
+        'price' => ['required', 'integer'],
     ]);
 
-    $car = Car::find($request->id);
+    $car = Car::find($validated['id']);
 
-    Auth::user()->decrement('balance',$request->price);
+    $car->update([
+      'rare' => $car->rare + 1,
+      'fuel_max' => $car->fuel_max + 2,
+    ]);
 
-    $car->increment('rare');
-    $car->increment('fuel_max',2);
+    Auth::user()->decrement('balance', $validated['price']);
   }
 
   public function startRace(Request $request){
@@ -154,18 +164,23 @@ class CarController extends Controller
   }
 
   public function rand(){
-    $randCar = Car::inRandomOrder()->whereNot('user_id', Auth::id())
-    ->where('sale',0)->with('user')->first();
-
-    return $randCar;
+    return Car::query()
+      ->where('user_id', '!=', Auth::id())
+      ->where('sale', 0)
+      ->with(['user' => fn($q) => $q->select('id','name')])
+      ->select(['name','speed','power','rare','color','user_id'])
+      ->inRandomOrder()
+      ->first();
   }
 
   public function shop(){
-    $cars = Cache::remember('shop:cars', 60*2, function(){
-      return Car::where('sale', 2)->get();
+    return Cache::remember('shop:cars', now()->addHours(2), function () {
+      return Car::query()
+        ->where('sale', 2)
+        ->select(['id','name','price','speed','power',
+        'lvl','color','rare','fuel_max'])
+        ->get();
     });
-
-    return $cars;
   }
 
   public function buyInShop(Request $request){
@@ -190,80 +205,19 @@ class CarController extends Controller
   }
 
   public function fuelUpAll(){
-    $user = Auth::user();
-    $cars = $user->cars->where('sale', 0);
-
-    foreach($cars as $car){
-      if($car->fuel < $car->fuel_max){
-        $car->increment('fuel');
-      }
-    }
-
-    $user->decrement('balance', 10);
-  }
-
-  /*public function store(Request $request)
-  {   
-      $validations = $request->validate([
-          'title' =>  ['required'],
-          'price' =>  ['required'],
-          'category_id' =>  ['required','exists:categories,id'],
-          'img' =>  ['required'],
-          'descrip' => ['required'],
-      ]);
-
-      $image = $request['img'];
-      $name = md5($image->getClientOriginalName()).'.'.
-      $image->getClientOriginalExtension();
-      $filePath = Storage::disk('public')->putFileAs('/images', $image, $name);
-
-      Flower::create([
-          'title' => $request['title'],
-          'price' => $request['price'],
-          'category_id' => $request['category_id'],
-          'use_time_water' => $request['use_time_water'],
-          'img' => url( '/storage' . '/' . $filePath, ),
-          'descrip' => $request['descrip'],
-      ]);
-
-      return redirect(route('flowers'));
-  }
-
-
-  public function update(Request $request, Flower $flower)
-  {   
-      $validations = $request->validate([
-          'title' =>  ['required'],
-          'price' =>  ['required'],
-          'category_id' =>  ['required'],
-          'img' =>  ['required'],
-          'descrip' => ['required'],
-      ]);
-
+    return DB::transaction(function () {
+      $user = Auth::user();
       
-      $image = $request['img'];
-      $name = md5($image->getClientOriginalName()).'.'.
-      $image->getClientOriginalExtension();
-      $filePath = Storage::disk('public')->putFileAs('/images', $image, $name);
-
-      Flower::where('id', $flower->id)->update([
-          'title' => $request->title,
-          'price' => $request->price,
-          'category_id' => $request->category_id,
-          'use_time_water' => $request->use_time_water,
-          'img' => url( '/storage' . '/' . $filePath, ),
-          'descrip' => $request['descrip'],
-      ]);
-
-      return redirect(route('flowers'));
+      if ($user->balance > 10){
+        $updated = $user->cars()
+            ->where('sale', 0)
+            ->whereColumn('fuel', '<', 'fuel_max')
+            ->update([
+                'fuel' => DB::raw('fuel + 1')
+            ]);
+            
+        $user->decrement('balance', 10);
+      }
+    });
   }
-  */
-
-  /*public function delete(Car $car)
-  {
-      Car::destroy($car->id);
-
-      return redirect(route('cars'));
-  }
-  */
 }

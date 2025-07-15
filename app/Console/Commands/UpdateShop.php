@@ -6,6 +6,7 @@ use Illuminate\Console\Command;
 use App\Models\Car;
 use App\Models\Part;
 use App\Models\Check_item;
+use Illuminate\Support\Facades\Cache;
 
 class UpdateShop extends Command
 {
@@ -28,6 +29,9 @@ class UpdateShop extends Command
      */
     public function handle()
     {
+        Cache::forget('shop:cars');
+        Cache::forget('shop:parts');
+        
         Check_item::truncate();
 
         Car::where('sale', 2)->delete();
@@ -77,7 +81,9 @@ class UpdateShop extends Command
 
         $names = ['Aurora','Desert Hawk','Neon Flash','Phantom Racer','Prism',
         'Stormrider','Thunderbolt','Vortex','Wildfire','Cyclop','Eclipse X',
-        'Phoenix','Quantum','Shadow','Storm','Titanium','Nightshade'
+        'Phoenix','Quantum','Shadow','Storm','Titanium','Nightshade',
+        'Night Stalker', 'Lightning Strike', 'Avant Guard', 'Phantom Drive',
+        'Atlant'
         ];
 
         Car::create([
@@ -92,7 +98,6 @@ class UpdateShop extends Command
             'fuel_max' => 2*$rareCar1,
             'price' => array_sum(
             [$speedCar1*($rareCar1/2),$powerCar1*($rareCar1/2)])*8,
-
             'lvl' => rand(2,5),
         ]);
         Car::create([

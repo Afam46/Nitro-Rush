@@ -9,11 +9,12 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use App\Models\Car;
 use App\Models\Part;
+use Illuminate\Support\Facades\DB;
 
 class UserController extends Controller
 {
     public function index(){
-        return Auth::user();
+        return Auth::user()->only(['id','name','balance']);
     }
     public function balance(){
         return Auth::user()->balance;
@@ -26,27 +27,32 @@ class UserController extends Controller
         Auth::user()->increment('balance', $request->price);
     }
     public function sellPlayer(Request $request){
-        UpdateCar::dispatch();
+        return DB::transaction(function () use ($request) {
+            $car = Car::where('id', $request->id)
+                    ->where('sale', 1)
+                    ->lockForUpdate()
+                    ->firstOrFail();
 
-        $validations = $request->validate([
-            'id' => ['required'],
-            'price' =>  ['required'],
-            'user_id' =>  ['required','integer']
-        ]);
+            $buyer = User::where('id', $request->user_id)
+                    ->lockForUpdate()
+                    ->firstOrFail();
 
-        $car = Car::find($request->id);
-        $seller = $car->user;
-        $buyer = User::find($request->user_id);
+            $seller = User::where('id', $car->user_id)
+                    ->lockForUpdate()
+                    ->firstOrFail();
 
-        Car::where('id',$request->id)->update([
-            'sale' => 0,
-            'wins' => 0,
-            'quantity' => 0,
-            'user_id' => $request->user_id
-        ]);
+            if ($buyer->balance > $request->price) {
+                $car->update([
+                    'sale' => 0,
+                    'user_id' => $buyer->id,
+                ]);
 
-        $buyer->decrement('balance', $request->price);
-        $seller->increment('balance', $request->price);
+                $buyer->decrement('balance', $request->price);
+                $seller->increment('balance', $request->price);
+
+                UpdateCar::dispatch();
+            }
+        });
     }
 
     public function sellPlayerPart(Request $request){
