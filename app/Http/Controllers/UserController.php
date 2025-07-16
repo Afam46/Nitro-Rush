@@ -56,24 +56,31 @@ class UserController extends Controller
     }
 
     public function sellPlayerPart(Request $request){
-        UpdatePart::dispatch();
+        return DB::transaction(function () use ($request) {
+            $part = Part::where('id', $request->id)
+                    ->where('sale', 1)
+                    ->lockForUpdate()
+                    ->firstOrFail();
 
-        $validations = $request->validate([
-            'id' => ['required'],
-            'price' =>  ['required'],
-            'user_id' =>  ['required','integer']
-        ]);
+            $buyer = User::where('id', $request->user_id)
+                    ->lockForUpdate()
+                    ->firstOrFail();
 
-        $car = Part::find($request->id);
-        $seller = $car->user;
-        $buyer = User::find($request->user_id);
+            $seller = User::where('id', $part->user_id)
+                    ->lockForUpdate()
+                    ->firstOrFail();
 
-        Part::where('id',$request->id)->update([
-            'sale' => 0,
-            'user_id' => $request->user_id
-        ]);
+            if ($buyer->balance > $request->price) {
+                $part->update([
+                    'sale' => 0,
+                    'user_id' => $buyer->id,
+                ]);
 
-        $buyer->decrement('balance', $request->price);
-        $seller->increment('balance', $request->price);
+                $buyer->decrement('balance', $request->price);
+                $seller->increment('balance', $request->price);
+
+                UpdatePart::dispatch();
+            }
+        });
     }
 }

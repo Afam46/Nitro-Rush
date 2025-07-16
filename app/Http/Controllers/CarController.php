@@ -118,7 +118,7 @@ class CarController extends Controller
 
   public function showRace(Car $car){
     return $car->load(['user' => function($query) {
-      $query->select('id', 'name');
+      $query->select('id', 'name', 'balance');
     }]);
   }
 

@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Cache;
 use App\Http\Controllers\CarController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\RaceController;
@@ -70,12 +71,18 @@ Route::prefix('gears')->controller(GearController::class)
 });
 
 Route::get('/checkCars', function(){
-    return Check_item::where('user_id', Auth::id())
-    ->where('part_id',null)->get();
+    return Check_item::query()
+        ->where('user_id', Auth::id())
+        ->whereNull('part_id')
+        ->select(['id', 'car_id'])
+        ->get();
 });
 Route::get('/checkParts', function(){
-    return Check_item::where('user_id', Auth::id())
-    ->where('car_id',null)->get();
+    return Check_item::query()
+        ->where('user_id', Auth::id())
+        ->whereNull('car_id')
+        ->select(['id', 'part_id'])
+        ->get();
 });
 Route::post('/raceObjectImg', function(Request $request){
     $validations = $request->validate([

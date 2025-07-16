@@ -28,7 +28,7 @@ export default{
   methods:{
     equipCarId(id){
       axios.get(`/api/cars/show/${id}`).then(res => {
-        this.car = (res.data[0]);
+        this.car = res.data;
         modalParts.showModal();
         document.body.style.overflow = 'hidden'
       });

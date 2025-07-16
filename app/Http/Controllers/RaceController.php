@@ -9,14 +9,16 @@ use App\Models\Race;
 class RaceController extends Controller
 {
     public function index(){
-        $races = Cache::remember('races', 60*2, function(){
-            return Race::all();
+        return Cache::remember('races', now()->addHours(2), function () {
+            return Race::query()
+                ->select(['id','name','price','img','prize','min_lvl'])
+                ->get();
         });
-
-        return $races;
     }
 
     public function show(Race $race){
-        return $race;
+        return Cache::remember("races:".$race->id, now()->addHours(2), function () use ($race) {
+            return $race;
+        });
     }
 }

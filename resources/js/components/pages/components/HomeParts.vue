@@ -116,30 +116,12 @@ export default{
         axios.post('/api/parts/equip',{id: id, car_id: this.car.id});
         this.$emit('getCars');
         this.car.parts_count++;
-
-        /*let atributes = document.querySelector(`[data-na='${this.car.id}']`);
-        let speedAt = atributes.children[0].children[1]
-        let powerAt = atributes.children[2].children[1]
-        let equipCount = atributes.children[3].children[1]
-        speedAt.textContent = parseInt(speedAt.textContent) + speed;
-        powerAt.textContent = parseInt(powerAt.textContent) + power;
-        equipCount.textContent = `${
-        parseInt(equipCount.textContent.split('/')[0]) + 1}/${rare}`;*/
       }
     },
     takeOff(id){
       axios.post('/api/parts/takeOff',{id: id, car_id: this.car.id});
       this.$emit('getCars');
       this.car.parts_count--;
-
-      /*let atributes = document.querySelector(`[data-na='${this.car.id}']`);
-      let speedAt = atributes.children[0].children[1]
-      let powerAt = atributes.children[2].children[1]
-      let equipCount = atributes.children[3].children[1]
-      speedAt.textContent = parseInt(speedAt.textContent) - speed;
-      powerAt.textContent = parseInt(powerAt.textContent) - power;
-      equipCount.textContent = `${
-      parseInt(equipCount.textContent.split('/')[0]) - 1}/${rare}`;*/
     },
     takeOffAll(){
       axios.post('/api/parts/takeOffAll',{car_id: this.car.id});
@@ -182,7 +164,17 @@ export default{
     width: 90%;
   }
 }
-@media screen and (min-width: 400px) {
+@media screen and (min-width: 1200px) {
+  #modalParts{
+    width: 60%;
+  }
+}
+@media screen and (max-width: 1200px) {
+  #modalParts{
+    width: 70%;
+  }
+}
+@media screen and (max-width: 1000px) {
   #modalParts{
     width: 80%;
   }

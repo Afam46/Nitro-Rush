@@ -89,6 +89,7 @@ export default{
     getBalance(){
       axios.get('/api/user/balance').then(res => {
         this.balance = res.data;
+        document.querySelector('.balance').textContent = this.balance;
       });
     },
     getCars(){

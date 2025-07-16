@@ -101,7 +101,6 @@ export default{
     }
   },
   mounted(){
-    this.getBalance();
     this.getCar();
     this.getRace();
     this.getEnemyCar();
@@ -267,14 +266,11 @@ export default{
 
         axios.post(`/api/cars/defeat/${this.car.id}`);
       }else{
-        if(getRand(0,101) > 92){
+        if(getRand(0,101) > 94){
           axios.get('/api/parts/rand').then(res => {
             this.partName = res.data.name;
             this.partImg = res.data.img;
-            let partId = res.data.id;
-            axios.post('/api/parts/fallingOut',{id : partId}).then(res => {
-              localStorage.setItem('newPart', res.data);
-            });
+            localStorage.setItem('newPart', res.data.id);
           });
         }
         document.querySelector('.body-player').style.transition = '2.9s';
@@ -301,14 +297,10 @@ export default{
   },
 
   methods:{
-    getBalance(){
-      axios.get('/api/user/balance').then(res => {
-        this.balance = res.data;
-      });
-    },
     getCar(){
       axios.get(`/api/cars/showRace/${this.carId}`).then(res => {
         this.car = res.data;
+        this.balance = res.data.user.balance;
       })
     },
     getRace(){

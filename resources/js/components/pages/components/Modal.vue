@@ -42,11 +42,12 @@ export default{
       }
       const carId = parseInt(document.body.className)
       this.$emit('sellNa', carId);
-      axios.post('/api/cars/sell',{id: carId, price: this.price});
+      axios.post('/api/cars/sell',{id: carId, price: this.price}).then(res => {
+        this.$emit('getCars');
+      });
       document.body.className = ''
       document.body.style.overflow = 'visible';
       modal.close();
-      this.$emit('getCars');
     },
   }
 }

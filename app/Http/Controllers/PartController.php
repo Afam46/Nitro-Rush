@@ -10,160 +10,212 @@ use App\Models\User;
 use App\Models\Part;
 use App\Models\Check_item;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 
 class PartController extends Controller
 {
     public function index(){
-        return Part::with('user')->where('sale', 1)
-        ->orderBy('updated_at', 'desc')->get();
+      return Part::query()
+        ->where('sale', 1)
+        ->with(['user' => fn($q) => $q->select('id', 'name')])
+        ->select(['id','name', 'price','speed','power','user_id','lvl','fuel','img'])
+        ->orderByDesc('updated_at')
+        ->get();
     }
 
     public function indexGarage(){
-        $parts = Auth::user()->parts->where('sale', 0);
-
-        return $parts;
+      return Auth::user()
+        ->parts()
+        ->where('sale', 0)
+        ->select(['id','name','speed','power','lvl','fuel','img'])
+        ->orderBy('lvl')
+        ->get();
     }
 
     public function takeOffAll(Request $request){
-        $validations = $request->validate([
-          'car_id' =>  ['required','integer']
+      $validated = $request->validate([
+        'car_id' => ['required', 'integer', 'exists:cars,id,user_id,'.Auth::id()]
+      ]);
+
+      return DB::transaction(function () use ($validated) {
+        $car = Car::where('id', $validated['car_id'])
+                ->where('user_id', Auth::id())
+                ->lockForUpdate()
+                ->firstOrFail();
+
+        $parts = Part::where('car_id', $validated['car_id'])
+                ->selectRaw('SUM(speed) as total_speed, SUM(power)
+                as total_power, SUM(fuel) as total_fuel')
+                ->first();
+
+        $car->update([
+            'speed' => DB::raw("speed - {$parts->total_speed}"),
+            'power' => DB::raw("power - {$parts->total_power}"),
+            'fuel_max' => DB::raw("fuel_max - {$parts->total_fuel}")
         ]);
 
-        $car = Car::find($request->car_id);
-        $part = Part::where('car_id', $request->car_id);
-
-        $sumSpeed = $part->sum('speed');
-        $sumPower = $part->sum('power');
-        $sumFuel = $part->sum('fuel');
-
-        $car->decrement('speed', $sumSpeed);
-        $car->decrement('power', $sumPower);
-        $car->decrement('fuel_max', $sumFuel);
-
-        $part->update([
-            'car_id' => null
-        ]);
+        Part::where('car_id', $validated['car_id'])
+          ->update(['car_id' => null]);
+      });
     }
 
     public function returnPart(Request $request){
-      UpdatePart::dispatch();
-
-      $validations = $request->validate([
-        'id' =>  ['required','integer']
+      $validated = $request->validate([
+          'id' => ['required', 'integer', 'exists:parts,id,user_id,'.Auth::id()]
       ]);
 
-      Part::where('id', $request->id)->update([
-          'sale' => 0
-      ]);
+      DB::transaction(function () use ($validated) {
+        $part = Part::where('id', $validated['id'])
+                ->where('user_id', Auth::id())
+                ->where('sale', 1)
+                ->firstOrFail();
+
+        $part->update(['sale' => 0]);
+
+        UpdatePart::dispatch();
+      });
     }
 
-    public function equip(Request $request){
-        $validations = $request->validate([
-          'id' =>  ['required','integer'],
-          'car_id' =>  ['required','integer']
+   public function equip(Request $request){
+      $validated = $request->validate([
+          'id' => ['required', 'integer', 'exists:parts,id,user_id,'.Auth::id()],
+          'car_id' => ['required', 'integer', 'exists:cars,id,user_id,'.Auth::id()]
+      ]);
+
+      return DB::transaction(function () use ($validated) {
+        $part = Part::where('id', $validated['id'])
+                ->where('user_id', Auth::id())
+                ->whereNull('car_id')
+                ->lockForUpdate()
+                ->firstOrFail();
+
+        $car = Car::where('id', $validated['car_id'])
+               ->where('user_id', Auth::id())
+               ->lockForUpdate()
+               ->firstOrFail();
+
+        $car->update([
+            'power' => DB::raw("power + {$part->power}"),
+            'speed' => DB::raw("speed + {$part->speed}"), 
+            'fuel_max' => DB::raw("fuel_max + {$part->fuel}")
         ]);
 
-        $part = Part::find($request->id);
-        $car = Car::find($request->car_id);
-
-        $part->update([
-            'car_id' => $request->car_id
-        ]);
-
-        $car->increment('power', $part->power);
-        $car->increment('speed', $part->speed);
-        $car->increment('fuel_max', $part->fuel);
+        $part->update(['car_id' => $car->id]);
+      });
     }
 
     public function takeOff(Request $request){
-        $validations = $request->validate([
-          'id' =>  ['required','integer'],
-          'car_id' =>  ['required','integer']
+      $validated = $request->validate([
+          'id' => ['required', 'integer', 'exists:parts,id,car_id,'.$request->car_id],
+          'car_id' => ['required', 'integer', 'exists:cars,id,user_id,'.Auth::id()]
+      ]);
+
+      return DB::transaction(function () use ($validated) {
+        $part = Part::where('id', $validated['id'])
+                ->where('car_id', $validated['car_id'])
+                ->lockForUpdate()
+                ->firstOrFail();
+
+        $car = Car::where('id', $validated['car_id'])
+               ->where('user_id', Auth::id())
+               ->lockForUpdate()
+               ->firstOrFail();
+
+        $part->update(['car_id' => null]);
+
+        $car->update([
+            'power' => DB::raw("GREATEST(0, power - {$part->power})"),
+            'speed' => DB::raw("GREATEST(0, speed - {$part->speed})"),
+            'fuel_max' => DB::raw("GREATEST(0, fuel_max - {$part->fuel})"),
+            'fuel' => DB::raw("LEAST(fuel, GREATEST(0, fuel_max - {$part->fuel}))")
         ]);
-
-        $part = Part::find($request->id);
-        $car = Car::find($request->car_id);
-
-        $part->update([
-            'car_id' => null
-        ]);
-
-        $car->decrement('power', $part->power);
-        $car->decrement('speed', $part->speed);
-        $car->decrement('fuel_max', $part->fuel);
-        if($car->fuel > $car->fuel_max){
-            while($car->fuel !== $car->fuel_max){
-                $car->decrement('fuel');
-            }
-        }
+      });
     }
 
     public function sell(Request $request){
-      UpdatePart::dispatch();
-
-      $validations = $request->validate([
-        'id' =>  ['required','integer'],
-        'price' =>  ['required','integer']
+      $validated = $request->validate([
+        'id' => ['required', 'integer', 'exists:parts,id,user_id,'.Auth::id()],
+        'price' => ['required', 'integer', 'min:1', 'max:8000000']
       ]);
 
-      $part = Part::find($request->id);
+      DB::transaction(function () use ($validated) {
+        $part = Part::where('id', $validated['id'])
+          ->where('user_id', Auth::id())
+          ->where('sale', 0)
+          ->lockForUpdate()
+          ->firstOrFail();
 
-      if($part->user->id === Auth::id()){  
         $part->update([
           'sale' => 1,
-          'price' => $request->price
+          'price' => $validated['price'],
         ]);
-      }
+
+        UpdatePart::dispatch();
+      });
     }
 
     public function rand(){
-      $randPart = Part::inRandomOrder()->where('user_id', null)
-      ->where('car_id', null)->first();
+      return DB::transaction(function () {
+        $randPart = Part::query()
+            ->whereNull('user_id')
+            ->whereNull('car_id')
+            ->select(['id','name','img','power','speed','fuel','lvl'])
+            ->lockForUpdate()
+            ->inRandomOrder()
+            ->firstOrFail();
 
-      return $randPart;
-    }
-
-    public function fallingOut(Request $request){
-        $validations = $request->validate([
-          'id' =>  ['required','integer'],
+        $newPart = $randPart->replicate()->fill([
+            'user_id' => Auth::id(),
+            'sale' => 0,
         ]);
-
-        $prizePart = Part::find($request->id);
-
-        $newPart = $prizePart->replicate();
-        $newPart->user_id = Auth::id();
-        $newPart->sale = 0;
         $newPart->save();
 
-        return $newPart->id;
+        return [
+          'id' => $newPart->id,
+          'name' => $newPart->name,
+          'img' => $newPart->img,
+        ];
+      });
     }
 
     public function shop(){
-      $parts = Cache::remember('shop:parts', 60*2, function(){
-          return Part::all()->where('sale', 2);
+      return Cache::remember('shop:parts', now()->addHours(2), function () {
+        return Part::query()
+          ->where('sale', 2)
+          ->select(['id','name','price','img','power','speed','fuel','lvl'])
+          ->get();
       });
-
-      return $parts;
     }
 
     public function buyInShop(Request $request){
-        $validations = $request->validate([
-          'id' => ['required', 'integer'],
-          'price' => ['required', 'integer'],
-        ]);
+      $validated = $request->validate([
+        'id' => ['required', 'integer', 'exists:parts,id,sale,2'],
+        'price' => ['required', 'integer', 'min:1']
+      ]);
 
-        Auth::user()->decrement('balance', $request->price);
+      return DB::transaction(function () use ($validated) {
+        $user = User::where('id', Auth::id())
+            ->lockForUpdate()
+            ->firstOrFail();
 
-        $part = Part::find($request->id);
+        if ($user->balance > $validated['price']) {
+          $part = Part::where('id', $validated['id'])
+            ->where('sale', 2)
+            ->firstOrFail();
 
-        $newPart = $part->replicate();
-        $newPart->sale = 0;
-        $newPart->user_id = Auth::id();
-        $newPart->save();
+          $newPart = $part->replicate()->fill([
+            'sale' => 0,
+            'user_id' => $user->id,
+          ]);
+          $newPart->save();
 
-        Check_item::create([
-          'part_id' => $part->id,
-          'user_id' => Auth::id()
-        ]);
-  }
+          $user->decrement('balance', $validated['price']);
+
+          Check_item::create([
+            'part_id' => $part->id,
+            'user_id' => $user->id,
+          ]);
+        }
+      });
+    }
 }
