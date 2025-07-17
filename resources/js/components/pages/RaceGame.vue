@@ -12,11 +12,11 @@
           <div style="width: 60%;">
             <div class="atribute">
               <div class="speed-bg"><img src="./img/speed.png" alt=""></div>
-              <div class="scale">{{ Math.round(car.speed * (car.rare/2)) }}</div>
+              <div class="scale">{{ car.speed }}</div>
             </div>
             <div class="atribute">
               <div class="power-bg"><img src="./img/power.png" alt=""></div>
-              <div class="scale">{{ Math.round(car.power * (car.rare/2))}}</div>
+              <div class="scale">{{ car.power }}</div>
             </div>
           </div>
         </div>
@@ -30,7 +30,7 @@
           <div style="width: 60%;">
             <div class="atribute">
               <div class="scale" style="border-radius: 10px 0 0 10px;">
-                {{ Math.round(enemyCar.speed * (enemyCar.rare/2)) }}
+                {{ enemyCar.speed }}
               </div>
               <div class="speed-bg" style="border-radius: 0 10px 10px 0;">
                 <img src="./img/speed.png" alt="" style="rotate: 180deg;">
@@ -38,7 +38,7 @@
             </div>
             <div class="atribute">
               <div class="scale" style="border-radius: 10px 0 0 10px;">
-                {{ Math.round(enemyCar.power * (enemyCar.rare/2))}}
+                {{ enemyCar.power }}
               </div>
               <div class="power-bg" style="border-radius: 0 10px 10px 0;">
                 <img src="./img/power.png" alt="">
@@ -243,17 +243,11 @@ export default{
     },10000);
 
     setTimeout(() => {
-      const carBonus =
-      Math.round((Math.round(((this.car.speed * this.car.rare/2)
-      - finePlayer*10))
-      + Math.round(this.car.power
-      * (this.car.rare/2)))/6);
+      const carBonus = Math.round((Math.round(this.car.speed
+      - (finePlayer*10)) + this.car.power)/6);
 
-      const enemyCarBonus =
-      Math.round((Math.round(((this.enemyCar.speed * this.enemyCar.rare/2))
-      - fineEnemy*10)
-      + Math.round(this.enemyCar.power
-      * (this.enemyCar.rare/2)))/6);
+      const enemyCarBonus = Math.round((Math.round(this.enemyCar.speed
+      - (finePlayer*10)) + this.enemyCar.power)/6);
 
       console.log(carBonus, enemyCarBonus, carBonus - enemyCarBonus);
 
@@ -266,7 +260,7 @@ export default{
 
         axios.post(`/api/cars/defeat/${this.car.id}`);
       }else{
-        if(getRand(0,101) > 94){
+        if(getRand(0,101) > 1){
           axios.get('/api/parts/rand').then(res => {
             this.partName = res.data.name;
             this.partImg = res.data.img;

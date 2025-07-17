@@ -24,7 +24,7 @@
           <div style="width: 45%;">
             <div class="atribute">
               <div class="speed-bg"><img src="../img/speed.png" alt=""></div>
-              <div class="scale">{{ Math.round(car.speed * (car.rare/2)) }}</div>
+              <div class="scale">{{ car.speed }}</div>
             </div>
             <div class="atribute">
               <div class="fuel-bg"><img src="../img/fuel.png" alt=""></div>
@@ -32,7 +32,7 @@
             </div>
             <div class="atribute">
               <div class="power-bg"><img src="../img/power.png" alt=""></div>
-              <div class="scale">{{ Math.round(car.power * (car.rare/2))}}</div>
+              <div class="scale">{{ car.power }}</div>
             </div>
           </div>
           <div style="margin-top: 10px; width: 50%;">

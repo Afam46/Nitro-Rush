@@ -4,7 +4,7 @@
       <div class="speed-bg-car">
         <img src="../img/speed.png" alt="">
       </div>
-      <p>{{ Math.round(item.speed * (item.rare/2)) }}</p>
+      <p>{{ item.speed }}</p>
     </div>
     <div class="atribute-market">
       <div class="fuel-bg-car">
@@ -16,7 +16,7 @@
       <div class="power-bg-car">
         <img src="../img/power.png" alt="">
       </div>
-      <p>{{ Math.round(item.power * (item.rare/2)) }}</p>
+      <p>{{ item.power }}</p>
     </div>
   </div>
 </template>

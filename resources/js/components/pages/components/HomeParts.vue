@@ -1,20 +1,18 @@
 <template>
-  <div id="divna" style="width: 100%" v-if="parts">
+  <div id="divna" style="width: 100%">
     <ModalParts @getParts="getParts" @cdSell="cdSell = null" 
     @sellNa="sellNa"/>
     <dialog id="modalParts" class="modal" @click="clickOnModal" style="
     box-shadow: inset 0 0 10px rgb(0, 0, 0, 0.4); min-width: 52%;">
-      <div class="modal-inner" v-if="car" style="border: none;">
+      <div class="modal-inner" v-if="car && parts" style="border: none;">
         <p style="font-size: 20px; margin-bottom: 10px; text-align: center;">
           Выберите запчасти для {{ car.name }}:
         </p>
-        <button class="orange-btn" style="margin: 10px 0; width: 50%;"
-        @click="takeOffAll" v-if="car.parts_count > 0">Снять все</button>
         <article class="parts">
           <article class="part" v-for="part in parts" :key="part.id"
           @click="removeStorageNewPart(part.id)">
             <p style="text-align: center;">{{ part.name }}</p>
-            <div class="img-block" style="width: 100%; min-height: 130px;">
+            <div class="img-block" style="width: 100%; min-height: 160px;">
               <p style="text-align: center; background:
               linear-gradient(to bottom right, #37B6E9, #4B4CED);
               border-radius: 10px; position: absolute; width: 20%;"
@@ -46,7 +44,7 @@
                 class="disabled" disabled>Недостаточный уровень</button>
                 <button v-else-if="car.parts_count >= car.rare"
                 class="disabled" disabled>Недостаточно места</button>
-                <button v-else-if="cd && cdSell !== part.id" class="orange-btn" 
+                <button v-else-if="cdSell !== part.id" class="orange-btn" 
                 @click="equip(part.id, part.lvl), part.car_id = car.id">Экипировать</button>
                 <button v-else class="disabled">Экипировать</button>
               </div>
@@ -54,16 +52,24 @@
                 <button class="disabled" disabled>Экипировано на<br>другой машине</button>
               </div>
               <div v-else>
-                <button class="orange-btn" v-if="part.car_id == car.id && cd"
-                @click="takeOff(part.id), part.car_id = null">Снять</button>
+                <button class="disabled" style="margin-bottom: 10px;">
+                  Экипировать
+                </button>
+                <button class="orange-btn" v-if="part.car_id == car.id"
+                @click="takeOff(part.id), part.car_id = null">
+                  Снять
+                </button>
               </div>
               <div class="orange-btn" style="margin-top: 10px;"
-              v-if="!part.car_id && cd" @click="modalShow(part.id)">Продать</div>
+              v-if="!part.car_id" @click="modalShow(part.id)">Продать</div>
             </div>
           </article>
         </article>
         <button class="btn" @click="modalClose"
         style="padding: 5px 16px;">Закрыть</button>
+      </div>
+      <div class="modal-inner" v-else style="border: none;">
+        <p>Загрузка...</p>
       </div>
     </dialog>
   </div>
@@ -75,34 +81,28 @@ import ModalParts from './ModalParts.vue';
 
 export default{
   components:{ModalParts},
-  props:{car:Object},
+  props:{car:Object,parts:Object},
   data(){
     return{
-      parts: null,
       carId: null,
       newPart: parseInt(localStorage.getItem('newPart')),
-      cd: 1,
       cdSell: null,
     }
   },
-  mounted(){
-    this.getParts();
-  },
   methods:{
     getParts(){
-      axios.get(`/api/parts/garage`).then(res => {
-        this.parts = res.data;
-        this.cd = 1;
-      });
+      this.$emit('getParts');
     },
     modalClose(){
       modalParts.close();
       document.body.style.overflow = 'visible';
+      this.$emit('deleteParts');
     },
     clickOnModal(event){
       if(event.target === event.currentTarget){
         modalParts.close();
         document.body.style.overflow = 'visible';
+        this.$emit('deleteParts');
       }
     },
     modalShow(partId){
@@ -191,6 +191,9 @@ export default{
   .orange-btn, .disabled, .atribute-market{
     font-size: 14px;
   }
+}
+#modalParts{
+  min-height: 90%;
 }
 .parts{
   display: flex;

@@ -40,8 +40,8 @@ export default{
       const nameNa = this.names[Math.round(Math.random()*1)]
       axios.post('/api/cars/store', {
         name: nameNa,
-        speed: Math.ceil(this.getRand(25, 50)),
-        power: Math.ceil(this.getRand(25, 50)),
+        speed: Math.ceil(this.getRand(30, 40)),
+        power: Math.ceil(this.getRand(30, 40)),
         color: this.colors[Math.round(Math.random()*3)],
       });
     },

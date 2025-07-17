@@ -53,7 +53,7 @@ Route::prefix('races')->controller(RaceController::class)
 Route::prefix('parts')->controller(PartController::class)
 ->group(function(){
     Route::get('/','index');
-    Route::get('/garage','indexGarage');
+    Route::get('/garage/{car}','indexGarage');
     Route::post('/returnPart', 'returnPart');
     Route::post('/equip', 'equip');
     Route::post('/takeOff', 'takeOff');

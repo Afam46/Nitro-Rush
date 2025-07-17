@@ -23,40 +23,20 @@ class PartController extends Controller
         ->get();
     }
 
-    public function indexGarage(){
+    public function indexGarage(Car $car){
       return Auth::user()
         ->parts()
         ->where('sale', 0)
-        ->select(['id','name','speed','power','lvl','fuel','img'])
-        ->orderBy('lvl')
+        ->with(['car' => fn($q) => $q->select('id')])
+        ->select(['id','name','speed','power','lvl','fuel','img','car_id'])
+        ->orderByRaw('
+            CASE 
+                WHEN car_id = ? THEN 0  -- Сначала детали текущей машины
+                WHEN car_id IS NULL THEN 1  -- Затем непривязанные детали
+                ELSE 2  -- Все остальные в конце
+            END
+        ', [$car->id])
         ->get();
-    }
-
-    public function takeOffAll(Request $request){
-      $validated = $request->validate([
-        'car_id' => ['required', 'integer', 'exists:cars,id,user_id,'.Auth::id()]
-      ]);
-
-      return DB::transaction(function () use ($validated) {
-        $car = Car::where('id', $validated['car_id'])
-                ->where('user_id', Auth::id())
-                ->lockForUpdate()
-                ->firstOrFail();
-
-        $parts = Part::where('car_id', $validated['car_id'])
-                ->selectRaw('SUM(speed) as total_speed, SUM(power)
-                as total_power, SUM(fuel) as total_fuel')
-                ->first();
-
-        $car->update([
-            'speed' => DB::raw("speed - {$parts->total_speed}"),
-            'power' => DB::raw("power - {$parts->total_power}"),
-            'fuel_max' => DB::raw("fuel_max - {$parts->total_fuel}")
-        ]);
-
-        Part::where('car_id', $validated['car_id'])
-          ->update(['car_id' => null]);
-      });
     }
 
     public function returnPart(Request $request){

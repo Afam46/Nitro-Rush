@@ -88,13 +88,13 @@ protected function generateShopCars(){
     
     for ($i = 0; $i < 2; $i++) {
         $rare = rand(1, 3);
-        $speed = rand(15, 70);
-        $power = rand(15, 70);
+        $speed = rand(20, 80);
+        $power = rand(20, 80);
         
         Car::create([
             'name' => $names[array_rand($names)],
-            'speed' => $speed,
-            'power' => $power,
+            'speed' => $speed*1.4**($rare-1),
+            'power' => $power*1.4**($rare-1),
             'color' => $colors[array_rand($colors)],
             'sale' => 2,
             'rare' => $rare,
@@ -109,7 +109,7 @@ protected function generateShopCars(){
 protected function generateShopParts(){
     $partsData = [
         [
-            'name' => 'Медная пластина',
+            'name' => 'Медная Пластина',
             'img' => '/storage/img/mod_copper_plate.png',
             'speed' => rand(0, 5),
             'power' => rand(10, 30),
@@ -117,7 +117,7 @@ protected function generateShopParts(){
             'price_multiplier' => 10
         ],
         [
-            'name' => 'Намотка меди',
+            'name' => 'Намотка Меди',
             'img' => '/storage/img/mod_copper_winding.png',
             'speed' => rand(10, 30),
             'power' => rand(0, 5),
@@ -125,7 +125,7 @@ protected function generateShopParts(){
             'price_multiplier' => 10
         ],
         [
-            'name' => 'Запасной бак',
+            'name' => 'Запасной Бак',
             'img' => '/storage/img/mod_fuel.png',
             'speed' => rand(0, 5),
             'power' => rand(0, 5),
@@ -144,7 +144,7 @@ protected function generateShopParts(){
             'power' => $part['power'],
             'fuel' => $part['fuel'],
             'sale' => 2,
-            'lvl' => rand(1, 3),
+            'lvl' => rand(2, 3),
             'price' => $totalStats * $part['price_multiplier'],
         ]);
     }

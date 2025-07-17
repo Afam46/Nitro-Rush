@@ -1,6 +1,7 @@
 <template>
   <main>
-    <HomeParts :car="car" @getCars="getCarsAfterEquip"/>
+    <HomeParts :car="car" :parts="parts" @getCars="getCarsAfterEquip"
+    @getParts="getParts" @deleteParts="parts = null"/>
     <HomeCars @clickOnEquip="equipCarId" :cars="cars" :carsLenght="carsLenght"
     @getCars="getCars" @prev="prev" @next="next"
     @getCarsAfterEquip="getCarsAfterEquip"/>
@@ -16,6 +17,7 @@ export default{
   components:{HomeCars, HomeParts},
   data(){
     return{
+      parts: null,
       car: null,
       cars: null,
       carsLenght: null,
@@ -26,9 +28,15 @@ export default{
     this.getCars();
   },
   methods:{
+    getParts(){
+      axios.get(`/api/parts/garage/${this.car.id}`).then(res => {
+        this.parts = res.data;
+      });
+    },
     equipCarId(id){
       axios.get(`/api/cars/show/${id}`).then(res => {
         this.car = res.data;
+        this.getParts();
         modalParts.showModal();
         document.body.style.overflow = 'hidden'
       });

@@ -149,6 +149,8 @@ class CarController extends Controller
     $car->update([
       'rare' => $car->rare + 1,
       'fuel_max' => $car->fuel_max + 2,
+      'speed' => $car->speed * 1.4, 
+      'power' => $car->power * 1.4, 
     ]);
 
     Auth::user()->decrement('balance', $validated['price']);

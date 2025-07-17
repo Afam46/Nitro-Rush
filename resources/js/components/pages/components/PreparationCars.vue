@@ -25,7 +25,7 @@
           <div class="speed-bg-car">
             <img src="../img/speed.png" alt="" style="width: 75%">
           </div>
-          <p class="statas-text">{{ Math.round(car.speed * (car.rare/2)) }}</p>
+          <p class="statas-text">{{ car.speed }}</p>
         </div>
         <div class="atribute-market">
           <div class="fuel-bg-car">
@@ -37,7 +37,7 @@
           <div class="power-bg-car">
             <img src="../img/power.png" alt="" style="width: 75%">
           </div>
-          <p class="statas-text">{{ Math.round(car.power * (car.rare/2)) }}</p>
+          <p class="statas-text">{{ car.power }}</p>
         </div>
       </div>
       </div>
