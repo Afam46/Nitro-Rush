@@ -8,6 +8,7 @@
       <router-link :to="{name: 'login'}">Войти</router-link>
       <router-link :to="{name: 'register'}">Регистрация</router-link>
       <a style="cursor: pointer;" @click.prevent="logout">Выйти</a>
+      <p style="color: gray;">v 1.0.0</p>
     </nav>
     <div>
       <div class="balance-block">
