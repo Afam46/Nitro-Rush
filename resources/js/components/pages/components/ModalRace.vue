@@ -33,7 +33,7 @@
       </div>
       <router-link :to="{name:'races'}" class="btn" style="margin-bottom: 0;"
       >Сыграть еще</router-link>
-      <router-link :to="{name:'home'}" class="btn">Домой</router-link>
+      <router-link :to="{name:'home'}" class="btn" @click="goHome">Домой</router-link>
     </div>
   </dialog>
 </template>
@@ -41,6 +41,12 @@
 <script>
 export default{
   props:{prize:Number,isWin:Number,xp:Number,partName:String,partImg:String},
+  methods:{
+    goHome(){
+      document.querySelector('#race-footer').className = '';
+      document.querySelector('#home-footer').classList.add('active');
+    }
+  }
 }
 </script>
 

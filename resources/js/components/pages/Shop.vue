@@ -123,16 +123,21 @@
         <p>Купить</p><img src="./img/kybok.png" alt=""
         style="width: 15%; margin-left: 5px;">
       </button>
-      <button class="orange-btn" style="width: 50%;" @click="fuelUpAll"
-      v-if="balance >= 10">
+      <div v-if="balance >= 10" style="width: 50%;">
+        <button class="orange-btn" @click="fuelUpAll" v-if="!isFuel">
           <p>Заправить тачки</p>
           <div style="display: flex; justify-content: center;
           align-items: center;">
             за 10<img src="./img/kybok.png" alt=""
-            style="width: 15%; margin-left: 5px;">
+            style="width: 14%; margin-left: 5px;">
           </div>
-      </button>
-      <button class="disabled" style="width: 50%;" v-else>
+        </button>
+        <button v-else class="orange-btn">
+          <p>Все тачки</p>
+          <div>заправлены!</div>
+        </button>
+      </div>
+      <button v-else class="disabled" style="width: 50%;">
           <p>Заправить тачки</p>
           <div style="display: flex; justify-content: center;
           align-items: center;">
@@ -162,6 +167,7 @@ export default{
       buyCarCheck: true,
       checkCars: null,
       checkParts: null,
+      isFuel: false,
     }
   },
   mounted(){
@@ -249,6 +255,10 @@ export default{
     fuelUpAll(){
       if(this.balance >= 10){
         axios.post('/api/cars/fuelUpAll').then(res => {
+          this.isFuel = true;
+          setTimeout(()=>{
+            this.isFuel = false;
+          }, 800);
           const text = document.querySelector('.balance').textContent
           document.querySelector('.balance').textContent = parseInt(text) - 10;
         });

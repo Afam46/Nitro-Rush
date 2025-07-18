@@ -2,11 +2,11 @@
   <div class="footer-nav">
     <div class="footer-container">
       <nav>
-        <router-link :to="{name: 'races'}"
+        <router-link :to="{name: 'races'}" id="race-footer"
         :class="{'active': acId === 0}" @click="acId = 0">
           <img src="./pages/img/icon_race.png" style="width: 36%;">
         </router-link>
-        <router-link :to="{name: 'home'}"
+        <router-link :to="{name: 'home'}" id="home-footer"
         :class="{'active': acId === 1}" @click="acId = 1">
           <img src="./pages/img/icon_house.png">
         </router-link>

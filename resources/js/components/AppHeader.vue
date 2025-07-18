@@ -5,10 +5,6 @@
       <img src="./pages/img/icon_menu.png" alt="">
     </button>
     <nav class="menu" @click="showMenu">
-      <router-link :to="{name: 'races'}">Гонки</router-link>
-      <router-link :to="{name: 'home'}">Гараж</router-link>
-      <router-link :to="{name: 'market'}">Рынок</router-link>
-      <router-link :to="{name: 'shop'}">Магазин</router-link>
       <router-link :to="{name: 'login'}">Войти</router-link>
       <router-link :to="{name: 'register'}">Регистрация</router-link>
       <a style="cursor: pointer;" @click.prevent="logout">Выйти</a>

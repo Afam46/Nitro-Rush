@@ -260,7 +260,7 @@ export default{
 
         axios.post(`/api/cars/defeat/${this.car.id}`);
       }else{
-        if(getRand(0,101) > 1){
+        if(getRand(0,101) > 94){
           axios.get('/api/parts/rand').then(res => {
             this.partName = res.data.name;
             this.partImg = res.data.img;
