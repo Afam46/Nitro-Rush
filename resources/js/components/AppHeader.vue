@@ -4,11 +4,14 @@
     <button @click="showMenu" style="cursor: pointer; border: none; background: transparent;">
       <img src="./pages/img/icon_menu.png" alt="">
     </button>
-    <nav class="menu" @click="showMenu">
-      <router-link :to="{name: 'login'}">Войти</router-link>
-      <router-link :to="{name: 'register'}">Регистрация</router-link>
-      <a style="cursor: pointer;" @click.prevent="logout">Выйти</a>
-      <p style="color: gray;">v 1.0.0</p>
+    <nav class="menu">
+      <router-link :to="{name: 'login'}" @click="showMenu">Войти</router-link>
+      <router-link :to="{name: 'register'}" @click="showMenu">Регистрация</router-link>
+      <a style="cursor: pointer;" @click.prevent="logout" @click="showMenu">Выйти</a>
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <p style="color: gray;">Nitro Rush<br>v 1.0.0</p>
+        <p style="color: gray;">by Afam</p>
+      </div>
     </nav>
     <div>
       <div class="balance-block">

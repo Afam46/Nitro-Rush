@@ -98,6 +98,8 @@ export default{
       partName: '',
       partImg: '',
       gameObjects: [],
+      intervals: [],
+      timeouts: [],
     }
   },
   mounted(){
@@ -105,8 +107,41 @@ export default{
     this.getRace();
     this.getEnemyCar();
     this.getObjectsImg();
+    this.startRace();
+  },
+  methods:{
+    getCar(){
+      axios.get(`/api/cars/showRace/${this.carId}`).then(res => {
+        this.car = res.data;
+        this.balance = res.data.user.balance;
+      })
+    },
+    getRace(){
+      axios.get(`/api/races/show/${this.raceId}`).then(res => {
+        this.race = res.data;
+        let minPrize = Math.round(this.race.prize/5);
+        this.prize = Math.round(Math.random() * (this.race.prize - minPrize) + minPrize);
+      });
+    },
+    getEnemyCar(){
+      axios.get('/api/cars/rand').then(res => {
+        this.enemyCar = res.data
+      });
+    },
+    getObjectsImg(){
+      axios.post('/api/raceObjectImg',{id: this.raceId}).then(res => {
+        this.gameObjects = res.data;
+      })
+    },
+    playNaAudio(){
+      document.querySelector('audio').play();
+    },
+    startRace(){
+      function getRand(min, max) {
+        return Math.round(Math.random() * (max - min) + min);
+      }
 
-    function createFine(pl){
+      function createFine(pl){
       let fine = document.createElement('div');
       fine.classList.add('fine');
       document.querySelector(pl).appendChild(fine);
@@ -116,14 +151,16 @@ export default{
       fineImg.src = '/storage/img/speed.png';
       fine.appendChild(fineText);
       fine.appendChild(fineImg);
-      setTimeout(function(){
+      const time1 = setTimeout(function(){
         fine.remove();
       },600);
+      this.timeouts.push(time1);
     }
    
     const end = getRand(20000, 25000);
     let c = 4
-    setTimeout(() => {
+
+    const time2 = setTimeout(() => {
       this.playNaAudio();
       const interval = setInterval(function(){
       c--;
@@ -138,17 +175,15 @@ export default{
         .style.animationDuration =`${end - 8000}ms`;
       }
       },1000);
+      this.intervals.push(interval);
     },6000);
-
-    function getRand(min, max) {
-      return Math.round(Math.random() * (max - min) + min);
-    }
+    this.timeouts.push(time2);
 
     let sec = 2;
     let finePlayer = 0;
     let fineEnemy = 0;
 
-    setTimeout(() => {
+    const time3 = setTimeout(() => {
       const enemy = document.querySelector('.enemy');
       const player = document.querySelector('.player');
 
@@ -177,26 +212,30 @@ export default{
             if(getRand(0,1)){
               objectContainer.style.justifyContent = 'end'
               if(this.gameObjects[i].sliding){
-                setTimeout(function(){
+                const time4 = setTimeout(function(){
                   player.style.rotate = `${getRand(-5,5)}deg`;
                   finePlayer += 5;
                   createFine('.player-img-car');
                 },700);
-                setTimeout(function(){
+                this.timeouts.push(time4);
+                const time5 = setTimeout(function(){
                   player.style.rotate = `0deg`;
                 },1000);
+                this.timeouts.push(time5);
               }
             }else{
               objectContainer.style.justifyContent = 'start'
               if(this.gameObjects[i].sliding){
-                setTimeout(function(){
+                const time6 = setTimeout(function(){
                   enemy.style.rotate = `${getRand(-5,5)}deg`;
                   fineEnemy += 5;
                   createFine('.enemy-img-car');
                 },700);
-                setTimeout(function(){
+                this.timeouts.push(time6);
+                const time7 = setTimeout(function(){
                   enemy.style.rotate = `0deg`;
                 },1000);
+                this.timeouts.push(time7);
               }
             }
             objectContainer.style.animationDuration = `${sec}s`
@@ -222,41 +261,45 @@ export default{
             .style.marginBottom =`${y1-100}px`;
             finePlayer += 5;
             createFine('.player-img-car');
-            setTimeout(function(){
+            const time8 = setTimeout(function(){
               player.style.rotate = `0deg`;
             },1900);
+            this.timeouts.push(time8);
           }else{
             enemy.style.rotate = `${x2}deg`;
             document.querySelector('.body-enemy')
             .style.marginBottom =`${y2-100}px`;
             fineEnemy += 5;
             createFine('.enemy-img-car');
-            setTimeout(function(){
+            const time9 = setTimeout(function(){
               enemy.style.rotate = `0deg`;
             },1900);
+            this.timeouts.push(time9);
           }
         }
       },2000)
-      setTimeout(function(){
+      this.intervals.push(speedInter);
+      const time10 = setTimeout(function(){
         clearInterval(speedInter);
-      }, end - 11000)
+      }, end - 11000);
+      this.timeouts.push(time10);
     },10000);
+    this.timeouts.push(time3);
 
-    setTimeout(() => {
+    const time11 = setTimeout(() => {
       const carBonus = Math.round((Math.round(this.car.speed
       - (finePlayer*10)) + this.car.power)/6);
 
       const enemyCarBonus = Math.round((Math.round(this.enemyCar.speed
-      - (finePlayer*10)) + this.enemyCar.power)/6);
-
-      console.log(carBonus, enemyCarBonus, carBonus - enemyCarBonus);
+      - (fineEnemy*10)) + this.enemyCar.power)/6);
 
       if(getRand(0,101) > 50 + (carBonus - enemyCarBonus)){
         document.querySelector('.body-enemy').style.transition = '2.9s';
-        document.querySelector('.body-enemy').style.marginBottom = '800px';
-        setTimeout(() => {
+        document.querySelector('.body-enemy').style.marginBottom = '900px';
+        const time12 = setTimeout(() => {
           modalRace.showModal();
         },2000);
+        this.timeouts.push(time12);
 
         axios.post(`/api/cars/defeat/${this.car.id}`);
       }else{
@@ -268,7 +311,7 @@ export default{
           });
         }
         document.querySelector('.body-player').style.transition = '2.9s';
-        document.querySelector('.body-player').style.marginBottom = '800px';
+        document.querySelector('.body-player').style.marginBottom = '900px';
         this.isWin = 1;
         this.xp = Math.round(((this.prize/50/(parseInt(this.car.lvl))*
         Math.round(Math.random() * 2 + 1))) * 100) / 100;
@@ -277,9 +320,10 @@ export default{
           this.xp = 0.01;
         }
 
-        setTimeout(() => {
+        const time13 = setTimeout(() => {
           modalRace.showModal();
         },2000);
+        this.timeouts.push(time13);
         
         axios.post('/api/user/balanceEdit', {price: this.prize}).then(res => {
           document.querySelector('.balance').textContent = this.balance + this.prize;
@@ -288,36 +332,29 @@ export default{
         axios.post(`/api/cars/win/${this.car.id}`, {xp: this.xp});
       }
     },end);
+    this.timeouts.push(time11);
   },
-
-  methods:{
-    getCar(){
-      axios.get(`/api/cars/showRace/${this.carId}`).then(res => {
-        this.car = res.data;
-        this.balance = res.data.user.balance;
-      })
-    },
-    getRace(){
-      axios.get(`/api/races/show/${this.raceId}`).then(res => {
-        this.race = res.data;
-        let minPrize = Math.round(this.race.prize/5);
-        this.prize = Math.round(Math.random() * (this.race.prize - minPrize) + minPrize);
+  stopAllTimers() {
+    if(this.intervals){
+      this.intervals.forEach(inter => {
+        clearInterval(inter);
       });
-    },
-    getEnemyCar(){
-      axios.get('/api/cars/rand').then(res => {
-        this.enemyCar = res.data
-        console.log(res.data);
+      this.intervals = [];
+    }
+    if(this.timeouts){ 
+      this.timeouts.forEach(time => {
+        clearTimeout(time);
       });
-    },
-    getObjectsImg(){
-      axios.post('/api/raceObjectImg',{id: this.raceId}).then(res => {
-        this.gameObjects = res.data;
-      })
-    },
-    playNaAudio(){
-      document.querySelector('audio').play();
-    },
+      this.timeouts = [];
+    }
+  },
+  },
+  beforeDestroy() {
+    this.stopAllTimers();
+  },
+  beforeRouteLeave(to, from, next) {
+    this.stopAllTimers();
+    next();
   }
 }
 </script>
@@ -355,7 +392,7 @@ export default{
   width: 100%;
   display: flex;
   position: absolute;
-  margin-bottom: 1100px;
+  margin-bottom: 1200px;
   justify-content: center;
   animation-timing-function: linear;
 }

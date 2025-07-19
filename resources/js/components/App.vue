@@ -1,6 +1,6 @@
 <template>
   <AppHeader/>
-  <router-view style="margin-bottom: 90px;"></router-view>
+  <router-view></router-view>
   <AppFooter/>
 </template>
 
@@ -11,11 +11,13 @@ import AppFooter from './AppFooter.vue';
 import router from '../router';
 
 export default{
+   created() {
+    if (!this.$route.name) {
+      this.$router.push('/')
+    }
+  },
   components: {AppHeader, AppFooter},
   mounted(){
-    //window.addEventListener('load', function() {
-    //  router.push('/');
-    //}),
     this.getBalance();
   },
   methods:{
@@ -77,6 +79,7 @@ main{
   align-items: center;
   flex-direction: column;
   margin: 0 auto;
+  margin-bottom: 90px;
 }
 @media screen and (max-width: 1250px) {
   main{
