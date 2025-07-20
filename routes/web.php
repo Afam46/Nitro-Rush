@@ -6,8 +6,6 @@ Route::get('/', function(){
     return view('home');
 });
 
-Auth::routes();
-
 Route::get('{page}', function(){
     return view('home');
 })->where('page','.*');

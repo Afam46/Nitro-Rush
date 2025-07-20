@@ -10,6 +10,10 @@ use App\Http\Controllers\PartController;
 use App\Http\Controllers\GearController;
 use App\Models\Check_item;
 use App\Models\ObjectRace;
+use App\Http\Controllers\Auth\LoginController;
+
+Route::post('/login', [LoginController::class, 'login']);
+Route::post('/logout', [LoginController::class, 'logout']);
 
 Route::get('/user', function (Request $request) {
     return $request->user();
