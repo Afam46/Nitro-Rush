@@ -57,24 +57,35 @@ const router = createRouter({
     routes
 });
 
-router.beforeEach((to, from, next) => {
-    const isAuth = localStorage.getItem('isAuth');
-    if(!isAuth){
-        if(to.name === 'login' || to.name === 'register'){
-            return next()
-        }else{
-            return next({
-                name: 'login'
-            })
-        }
+router.beforeEach(async (to, from, next) => {
+  const token = localStorage.getItem('auth_token');
+  const isAuthRoute = to.name === 'login' || to.name === 'register';
+  
+  if (!token) {
+    if (isAuthRoute) {
+      return next();
     }
-    if(to.name === 'login' || to.name === 'register' && isAuth){
-        return next({
-            name: 'account'
-        })
-    }
+    return next({ name: 'login' })
+  }
 
-    next()
+  if (isAuthRoute) {
+    return next({ name: 'home' })
+  }
+
+  try {
+    await axios.get('/api/user', {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    });
+    next();
+  } catch (error) {
+    localStorage.removeItem('auth_token');
+    if (!isAuthRoute) {
+      return next({ name: 'login' });
+    }
+    next();
+  }
 })
 
 export default router;

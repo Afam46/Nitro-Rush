@@ -41,12 +41,24 @@ export default{
     window.removeEventListener('scroll', () => this.handleScroll())
   },
   methods:{
-    logout(){
-      axios.post('/logout').then(res => {
-        localStorage.removeItem('isAuth');
-        this.$router.push({name: 'login'})
-      })
-    },
+    async logout() {
+  try {
+    const response = await axios.post('/api/logout', {}, {
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('auth_token')}`,
+        'Accept': 'application/json'
+      },
+      withCredentials: true
+    });
+    
+    localStorage.removeItem('auth_token');
+    this.$router.push('/login');
+  } catch (error) {
+    console.error('Logout error:', error.response);
+    localStorage.removeItem('auth_token');
+    window.location.href = '/login';
+  }
+},
     showMenu(){
       if(this.open){
         document.querySelector('.menu').style.top = '-120svh';

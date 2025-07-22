@@ -29,7 +29,7 @@ export default{
   },
   methods:{
     getBalance(){
-      axios.get('api/user/balance').then(res => {
+      axios.get('/api/user/balance').then(res => {
         document.querySelector('.balance').textContent = res.data
       })
     },
@@ -42,24 +42,37 @@ export default{
         name: nameNa,
         speed: Math.ceil(this.getRand(30, 40)),
         power: Math.ceil(this.getRand(30, 40)),
-        color: this.colors[Math.round(Math.random()*3)],
+        color: this.colors[Math.round(Math.random()*4)],
       });
     },
-    register(){
-      axios.get('/sanctum/csrf-cookie').then(res => {
-        axios.post('/register', {
-          name: this.name,
-          email: this.email,
-          password: this.password,
-          password_confirmation: this.password_confirm
-        }).then(res => {
-          localStorage.setItem('isAuth', true);
-          this.createNewCar();
-          this.getBalance();
-          this.$router.push({name: 'home'});
+    register() {
+    // Получаем CSRF-куки перед запросом
+    axios.get('/sanctum/csrf-cookie').then(() => {
+        axios.post('/api/register', {
+            name: this.name,
+            email: this.email,
+            password: this.password,
+            password_confirmation: this.password_confirm
+        }, {
+            headers: {
+                'Accept': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        }).then(response => {
+            localStorage.setItem('auth_token', response.data.token);
+            
+            axios.defaults.headers.common['Authorization'] = `Bearer ${response.data.token}`;
+            
+            this.createNewCar();
+            this.getBalance();
+            
+            this.$router.push({name: 'home'});
+        }).catch(error => {
+            console.error('Registration error:', error.response?.data);
+            this.errors = error.response?.data?.errors || {};
         });
-      });
-    }
+    });
+}
   }
 }
 </script>

@@ -7,18 +7,21 @@ use App\Http\Controllers\CarController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\RaceController;
 use App\Http\Controllers\PartController;
-use App\Http\Controllers\GearController;
 use App\Models\Check_item;
 use App\Models\ObjectRace;
+use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\LoginController;
 
+Route::post('/register', [RegisterController::class, 'register']);
 Route::post('/login', [LoginController::class, 'login']);
-Route::post('/logout', [LoginController::class, 'logout']);
+Route::post('/logout', [LoginController::class, 'logout'])->middleware('auth:sanctum');
 
 Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
 
+Route::middleware('auth:sanctum')->group(function () {
+    
 Route::prefix('cars')->controller(CarController::class)
 ->group(function(){
     Route::get('/','index');
@@ -69,11 +72,6 @@ Route::prefix('parts')->controller(PartController::class)
     Route::post('/buyInShop','buyInShop');
 });
 
-Route::prefix('gears')->controller(GearController::class)
-->group(function(){
-    Route::get('/','index');
-});
-
 Route::get('/checkCars', function(){
     return Check_item::query()
         ->where('user_id', Auth::id())
@@ -94,4 +92,6 @@ Route::post('/raceObjectImg', function(Request $request){
     ]);
 
     return ObjectRace::where('race_id', $request->id)->get();
+});
+
 });

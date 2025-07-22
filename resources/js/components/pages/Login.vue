@@ -21,18 +21,35 @@ export default{
         document.querySelector('.balance').textContent = res.data
       })
     },
-    login(){
-      axios.get('/sanctum/csrf-cookie').then(res => {
-        axios.post('/login', {
-          email: this.email,
-          password: this.password
-        }).then(res => {
-          localStorage.setItem('isAuth', true);
-          this.getBalance();
-          this.$router.push({name: 'home'})
-        });
-      });
-    }
+   async login() {
+    try {
+    await axios.get('/sanctum/csrf-cookie');
+    
+    const response = await axios.post('/api/login', {
+      email: this.email,
+      password: this.password
+    }, {
+      headers: {
+        'Accept': 'application/json',
+        'X-Requested-With': 'XMLHttpRequest'
+      },
+      withCredentials: true
+    });
+
+    localStorage.setItem('auth_token', response.data.token);
+    axios.defaults.headers.common['Authorization'] = `Bearer ${response.data.token}`;
+
+    this.$router.push('/');
+
+  } catch (error) {
+    console.error('Full error:', error);
+
+    const serverMessage = error.response?.data?.message;
+    const errorMessage = serverMessage || 'Login failed';
+    
+    alert(`Error: ${errorMessage}`);
+  }
+}
   }
 }
 </script>

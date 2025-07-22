@@ -18,16 +18,16 @@ export default{
   },
   components: {AppHeader, AppFooter},
   mounted(){
-    this.getBalance();
+    //this.getBalance();
   },
   methods:{
-    getBalance(){
-      axios.get('api/user/balance').then(res => {
-        if(res.data > 0){
-          document.querySelector('.balance').textContent = res.data;
-        }
-      });
-    },
+    //getBalance(){
+    //  axios.get('api/user/balance').then(res => {
+    //    if(res.data > 0){
+    //      document.querySelector('.balance').textContent = res.data;
+    //    }
+    //  });
+    //},
   }
 }
 </script>
@@ -55,11 +55,14 @@ html, body{
   cursor:default;
   font-family: 'Montserrat';
   font-weight: 400;
+  font-size: 16px;
 }
 body{
   display: flex;
   flex-direction: column;
   min-height: 100%;
+  touch-action: pan-x pan-y; /* Разрешает только прокрутку по X и Y */
+  overscroll-behavior: contain; /* Блокирует "резиновый" эффект прокрутки */
 }
 *::-webkit-scrollbar {
   width: 0;
