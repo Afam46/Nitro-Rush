@@ -55,7 +55,34 @@ html, body{
   cursor:default;
   font-family: 'Montserrat';
   font-weight: 400;
-  font-size: 16px;
+}
+body a{
+  text-decoration: none;
+  color: white;
+  font-family: 'Montserrat';
+  font-weight: 400;
+}
+body p{
+  padding: 0;
+  margin: 0;
+}
+body button, body input{
+  font-size: 18px;
+  font-family: 'Montserrat';
+  font-weight: 400;
+  border: none;
+  background: transparent;
+  color: white;
+}
+@media screen and (max-width: 525px) {
+  body button, body input{
+    font-size: 16px;
+  }
+}
+@media screen and (max-width: 340px) {
+   body button, body input{
+    font-size: 13px;
+  }
 }
 body{
   display: flex;

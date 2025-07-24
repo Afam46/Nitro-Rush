@@ -12,7 +12,7 @@
             <p style="margin-right: 3px;">Затрата: {{ race.price }}</p>
             <img src="./img/fuel.png">
           </div>
-          <div class="lvl">
+          <div class="lvl" style="align-self: stretch;">
             <p>{{ race.min_lvl }} ур.</p>
           </div>
         </div>
@@ -22,7 +22,7 @@
             <img src="./img/kybok.png" alt="" style="width: 70%;">
           </div>
         </div>
-        <router-link class="orange-btn" 
+        <router-link class="orange-btn btn-shop" 
         :to="{path: '/preparation', query: {id: race.id}}">
           Начать</router-link>
       </article>
@@ -56,11 +56,12 @@ export default{
   justify-content: center;
   align-items: center;
   width: 100%;
+  padding: 0 10px;
 }
 .race{
   padding: 10px;
   width: 100%;
-  margin-bottom: 20px;
+  margin-top: 20px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -83,7 +84,7 @@ export default{
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 10px;
+  padding: 8px 10px;
   margin-left: 10px;
 }
 @media screen and (max-width: 450px) {
@@ -101,9 +102,9 @@ export default{
   border: 1px solid #4B4CED;
   background: linear-gradient(to bottom right, #353F54, #222834);
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
-  padding: 8px;
   margin: 10px 0;
   display: flex;
+  padding: 10px;
   align-items: center;
   justify-content: center;
   width: 60%;
@@ -112,7 +113,6 @@ export default{
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-left: 4px;
   width: 18%;
 }
 .kybok-race img{

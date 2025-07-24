@@ -1,9 +1,13 @@
 <template>
-  <div style="width: 25%; margin: 0 auto;">
-    <h2>Авторизация</h2>
-    <input v-model="email" type="email" placeholder="email">
-    <input v-model="password" type="password" placeholder="password">
-    <input @click.prevent="login" type="submit" value="login" class="orange-btn">
+  <div style="width: 25%; margin: 0 auto; display: flex; justify-content:center;">
+    <div>
+        <h2 style="text-align: center">Авторизация</h2>
+        <input v-model="email" type="email" placeholder="почта">
+        <input v-model="password" type="password" placeholder="пароль">
+        <input @click.prevent="login" type="submit" value="Войти" class="orange-btn"
+        style="margin: 10px 0;">
+        <router-link :to="{name: 'register'}">Нет аккаунта?</router-link>
+    </div>
   </div>
 </template>
 

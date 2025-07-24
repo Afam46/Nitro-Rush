@@ -119,6 +119,9 @@ export default{
 </script>
 
 <style>
+.atribute-market p{
+  padding: 4px 0;
+}
 #products{
   display: flex;
   justify-content: center;
@@ -164,12 +167,12 @@ export default{
 }
 @media screen and (max-width: 450px) {
   .orange-btn, .disabled, .atribute-market{
-    font-size: 16px;
+    font-size: 14px;
   }
 }
 @media screen and (max-width: 330px) {
   .orange-btn, .disabled, .atribute-market{
-    font-size: 14px;
+    font-size: 12px;
   }
 }
 .info{

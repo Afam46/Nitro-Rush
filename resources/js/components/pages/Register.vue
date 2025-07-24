@@ -1,11 +1,15 @@
 <template>
-   <div style="width: 25%; margin: 0 auto;">
-    <h2>Регистрация</h2>
-    <input v-model="name" type="name" placeholder="name">
-    <input v-model="email" type="email" placeholder="email">
-    <input v-model="password" type="password" placeholder="password">
-    <input v-model="password_confirm" type="password" placeholder="password_confirm">
-    <input @click.prevent="register" type="submit" value="register" class="orange-btn">
+   <div style="width: 25%; margin: 0 auto; display:flex; justify-content:center;">
+    <div>
+      <h2 style="text-align: center;">Регистрация</h2>
+      <input v-model="name" type="name" placeholder="имя">
+      <input v-model="email" type="email" placeholder="почта">
+      <input v-model="password" type="password" placeholder="пароль">
+      <input v-model="password_confirm" type="password"
+      placeholder="подтверждение пароля">
+      <input @click.prevent="register" type="submit" value="Зарегестрироваться" 
+      class="orange-btn" style="margin-top: 10px;">
+    </div>
   </div>
 </template>
 

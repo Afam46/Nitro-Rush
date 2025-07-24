@@ -2,7 +2,7 @@
   <dialog id="modalPartSell" class="modal" @click="clickOnModal" style="height: 60%;">
     <div class="modal-inner" style="background-color: transparent;
     border: 1px solid rgb(100, 100, 100);">
-      <p id="what">За какую цену вы хотели бы продать свой товар?</p>
+      <p id="what" style="text-align: center;">За какую цену вы хотели бы продать мод?</p>
       <input type="number" class="price-input" required v-model="price">
       <div class="buttons">
         <button class="btn" @click="modalClose">Отмена</button>
@@ -42,12 +42,13 @@ export default{
         this.price = 8000000;
       }
       const partId = parseInt(document.querySelector('#what').className)
-      axios.post('/api/parts/sell',{id: partId, price: this.price});
+      axios.post('/api/parts/sell',{id: partId, price: this.price}).then(res => {
+        this.$emit('getParts');
+      });
       this.$emit('sellNa', partId);
       document.querySelector('#what').className = ''
       document.body.style.overflow = 'visible';
       modalPartSell.close();
-      this.$emit('getParts');
     },
   }
 }

@@ -1,13 +1,14 @@
 <template>
   <header ref="headerRef" :class="{ 'out': isScrolledDown }">
     <div class="header-container">
-    <button @click="showMenu" style="cursor: pointer; border: none; background: transparent;">
-      <img src="./pages/img/icon_menu.png" alt="">
+    <button @click="showMenu" style="cursor: pointer; border: none; background: transparent;"
+    id="burger-icon">
+      <img src="./pages/img/icon_menu.png" id="burger-icon-img">
     </button>
     <nav class="menu">
-      <router-link :to="{name: 'login'}" @click="showMenu">Войти</router-link>
-      <router-link :to="{name: 'register'}" @click="showMenu">Регистрация</router-link>
-      <a style="cursor: pointer;" @click.prevent="logout" @click="showMenu">Выйти</a>
+      <router-link :to="{name: 'login'}" v-if="!isAuth">Войти</router-link>
+      <router-link :to="{name: 'register'}" v-if="!isAuth">Регистрация</router-link>
+      <a style="cursor: pointer;" @click.prevent="logout" v-if="isAuth">Выйти</a>
       <div style="display: flex; justify-content: space-between; align-items: center;">
         <p style="color: gray;">Nitro Rush<br>v 1.0.0</p>
         <p style="color: gray;">by Afam</p>
@@ -31,11 +32,12 @@ export default{
     return{
       open: false,
       isScrolledDown: false,
-      scrollPrev: 0
+      scrollPrev: 0,
+      isAuth: null,
     }
   },
   mounted() {
-    window.addEventListener('scroll', () => this.handleScroll())
+    window.addEventListener('scroll', () => this.handleScroll());
   },
   beforeDestroy() {
     window.removeEventListener('scroll', () => this.handleScroll())
@@ -60,12 +62,22 @@ export default{
   }
 },
     showMenu(){
+      this.isAuth = localStorage.getItem('auth_token');
       if(this.open){
         document.querySelector('.menu').style.top = '-120svh';
         this.open = false;
+        window.removeEventListener('click', this.closeMenu);
       }else{
-        document.querySelector('.menu').style.top = 0;
+        document.querySelector('.menu').style.top = '-10px';
         this.open = true;
+        window.addEventListener('click', this.closeMenu);
+      }
+    },
+    closeMenu(e){
+      if(e.target.id !== 'burger-icon' && e.target.id !== 'burger-icon-img'){
+        document.querySelector('.menu').style.top = '-120svh';
+        this.open = false;
+        window.removeEventListener('click', this.closeMenu);
       }
     },
     handleScroll() {
@@ -134,7 +146,7 @@ header{
 .balance{
   box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
   border-radius: 10px 0 0 10px;
-  padding: 6px;
+  padding: 8px;
   align-self: stretch;
 }
 .kybok{
@@ -146,6 +158,7 @@ header{
   justify-content: center;
   align-items: center;
   align-self: stretch;
+  padding: 2px;
 }
 .kybok img{
   width: 80%;

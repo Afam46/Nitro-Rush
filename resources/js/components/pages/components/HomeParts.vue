@@ -6,7 +6,7 @@
     box-shadow: inset 0 0 10px rgb(0, 0, 0, 0.4); min-width: 52%;">
       <div class="modal-inner" v-if="car && parts" style="border: none;">
         <p style="font-size: 20px; margin-bottom: 10px; text-align: center;">
-          Выберите запчасти для {{ car.name }}:
+          Выберите моды для {{ car.name }}:
         </p>
         <article class="parts">
           <article class="part" v-for="part in parts" :key="part.id"
@@ -113,22 +113,17 @@ export default{
     },
     equip(id, lvl){
       if(this.car.lvl >= lvl){
-        axios.post('/api/parts/equip',{id: id, car_id: this.car.id});
-        this.$emit('getCars');
-        this.car.parts_count++;
+        axios.post('/api/parts/equip',{id: id, car_id: this.car.id}).then(res => {
+            this.$emit('getCars');
+            this.car.parts_count++;
+        });
       }
     },
     takeOff(id){
-      axios.post('/api/parts/takeOff',{id: id, car_id: this.car.id});
-      this.$emit('getCars');
-      this.car.parts_count--;
-    },
-    takeOffAll(){
-      axios.post('/api/parts/takeOffAll',{car_id: this.car.id});
-      this.$emit('getCars');
-      this.car.parts_count = 0;
-      this.cd = 0;
-      this.getParts();
+      axios.post('/api/parts/takeOff',{id: id, car_id: this.car.id}).then(res => {
+            this.$emit('getCars');
+            this.car.parts_count--;
+      }); 
     },
     removeStorageNewPart(id){
       if(this.newPart === id){

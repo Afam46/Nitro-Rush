@@ -44,7 +44,7 @@
       <div class="main-items" v-if="checkParts">
         <div class="main-item" v-for="part in parts" :key="part.id">
           <p class="product-name-part">{{ part.name }}</p>
-          <div style="width: 100%; height: 100%;
+          <div style="width: 100%; height: 100%; min-height: 80px;
           display: flex; justify-content: center; align-items: center;">
             <img :src="part.img" alt="" style="width: 66%">
           </div>
@@ -52,14 +52,14 @@
             <div class="price-car-market" style="width: 100%">
               <div class="price-kybok-market" style="border-radius: 10px 0 0 10px;">
                 <p>{{ part.price }}</p>
-                <div class="kybok-market">
+                <div class="kybok-market" style="margin-left: 4px;">
                   <img src="./img/kybok.png" alt="">
                 </div>
               </div>
             </div>
             <div class="price-lvl-shop" style="width: 100%;">
               <div class="lvl" style="border-radius: 0 10px 10px 0;
-              width: 100%">{{ part.lvl }} ур.</div>
+              width: 100%; padding: 8px;">{{ part.lvl }} ур.</div>
             </div>
           </div>
           <AtributesMarketParts :item="part"/>
@@ -282,7 +282,7 @@ export default{
     font-size: 14px;
   }
 }
-@media screen and (max-width: 320px) {
+@media screen and (max-width: 360px) {
   .lvl, .product-name-part, .atribute-market-part{
     font-size: 12px;
   }
@@ -293,6 +293,7 @@ export default{
   align-items: center;
   width: 100%;
   flex-wrap: wrap;
+  padding: 0 10px;
 }
 .item {
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
@@ -342,7 +343,8 @@ export default{
   margin-bottom: 15px;
   box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.4);
   border-radius: 10px;
-  padding: 2px;
+  padding: 6px;
+  word-spacing: 100vw;
 }
 .buttons-shop{
   width: 100%;

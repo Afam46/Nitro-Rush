@@ -69,16 +69,12 @@ export default{
 @media screen and (max-width: 750px) {
   .price-input{
     font-size: 16px;
-    padding: 0;
   }
 }
 .modal{
   border: none;
   padding: 0;
   position: absolute; 
-  top: 50%;  
-  left: 50%;  
-  transform: translate(-50%, -50%); 
   border-radius: 60px;
   background: linear-gradient(to bottom right, rgb(53, 63, 84, 0.95),
   rgb(34, 40, 52, 0.95));
@@ -115,8 +111,8 @@ export default{
   background: linear-gradient(to bottom right, #37B6E9, #4B4CED);
   border-radius: 10px;
   color: white;
-  font-size: 20px;
-  padding: 5px 10px;
+  font-size: 18px;
+  padding: 8px 10px;
   cursor: pointer;
   margin: 15px 7px;
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.4);

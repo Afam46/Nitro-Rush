@@ -8,7 +8,7 @@
       </div>
       <div class="info">
         <div class="price-car-market">
-          <div class="price-text">
+          <div class="price-text" style="padding: 10px 6px;">
             Цена:
           </div>
           <div class="price-kybok-market">

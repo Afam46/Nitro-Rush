@@ -10,11 +10,11 @@
         <div class="atributes" style="position: absolute;
         bottom: 20px; left: 20px;">
           <div style="width: 60%;">
-            <div class="atribute">
+            <div class="atribute" style="font-size: 18px;">
               <div class="speed-bg"><img src="./img/speed.png" alt=""></div>
               <div class="scale">{{ car.speed }}</div>
             </div>
-            <div class="atribute">
+            <div class="atribute" style="font-size: 18px;">
               <div class="power-bg"><img src="./img/power.png" alt=""></div>
               <div class="scale">{{ car.power }}</div>
             </div>
@@ -29,7 +29,8 @@
         bottom: 20px; right: 20px;">
           <div style="width: 60%;">
             <div class="atribute">
-              <div class="scale" style="border-radius: 10px 0 0 10px;">
+              <div class="scale" style="border-radius: 10px 0 0 10px;
+              font-size: 18px;">
                 {{ enemyCar.speed }}
               </div>
               <div class="speed-bg" style="border-radius: 0 10px 10px 0;">
@@ -37,7 +38,8 @@
               </div>
             </div>
             <div class="atribute">
-              <div class="scale" style="border-radius: 10px 0 0 10px;">
+              <div class="scale" style="border-radius: 10px 0 0 10px;
+              font-size: 18px;">
                 {{ enemyCar.power }}
               </div>
               <div class="power-bg" style="border-radius: 0 10px 10px 0;">

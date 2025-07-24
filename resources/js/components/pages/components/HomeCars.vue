@@ -6,10 +6,10 @@
       <article class="car" v-for="car in cars" :key="car.id">
         <button class="orange-btn" @click="modalPartsShow(car.id)"
         v-if="cdSell !== car.id">
-          Экипировать
+          Модифицировать
         </button>
         <button v-else class="disabled">
-          Экипировать
+          Модифицировать
         </button>
         <p class="car-gar-name">{{ car.name }}</p>
         <div style="width: 40%; rotate: 90deg">
@@ -128,6 +128,7 @@ export default{
 .slider-container {
   position: relative;
   overflow: hidden;
+  height: 78svh;
 }
 .slider {
   display: flex;
@@ -136,17 +137,16 @@ export default{
 }
 .prev, .next{
   position: absolute;
-  top: 50%;
-  translate: 0 -50%;
   background: linear-gradient(to bottom right, #37B6E9, #4B4CED);
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
   border-radius: 10px;
   color: #fff;
   border: none;
   font-size: 30px;
-  padding: 10px;
+  padding: 16px 10px;
   z-index: 10;
   cursor: pointer;
+  line-height: 1;
 }
 .prev {
   left: 0;
@@ -164,6 +164,10 @@ export default{
   display: none;
   margin-bottom: 10px;
   font-size: 18px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 .level{
   background: linear-gradient(to bottom right, #37B6E9, #4B4CED);
