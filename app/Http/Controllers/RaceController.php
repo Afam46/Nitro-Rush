@@ -12,6 +12,7 @@ class RaceController extends Controller
         return Cache::remember('races', now()->addHours(2), function () {
             return Race::query()
                 ->select(['id','name','price','img','prize','min_lvl'])
+                ->orderBy('min_lvl')
                 ->get();
         });
     }

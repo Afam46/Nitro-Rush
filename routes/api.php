@@ -14,13 +14,17 @@ use App\Http\Controllers\Auth\LoginController;
 
 Route::post('/register', [RegisterController::class, 'register']);
 Route::post('/login', [LoginController::class, 'login']);
-Route::post('/logout', [LoginController::class, 'logout'])->middleware('auth:sanctum');
-
-Route::get('/user', function (Request $request) {
-    return $request->user();
-})->middleware('auth:sanctum');
 
 Route::middleware('auth:sanctum')->group(function () {
+
+Route::post('/logout', [LoginController::class, 'logout']);
+    
+Route::get('/user', function (Request $request) {
+        return response()->json([
+            'user' => $request->user(),
+            'authenticated' => true
+        ]);
+    });
     
 Route::prefix('cars')->controller(CarController::class)
 ->group(function(){

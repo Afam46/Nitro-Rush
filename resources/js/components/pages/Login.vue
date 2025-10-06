@@ -6,7 +6,7 @@
         <input v-model="password" type="password" placeholder="пароль">
         <input @click.prevent="login" type="submit" value="Войти" class="orange-btn"
         style="margin: 10px 0;">
-        <router-link :to="{name: 'register'}">Нет аккаунта?</router-link>
+        <router-link :to="{name: 'register'}">Нет аккаунта? <u>Регистрация</u></router-link>
     </div>
   </div>
 </template>
