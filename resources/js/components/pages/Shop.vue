@@ -117,12 +117,8 @@
         </div>
       </div>
     </article>
-    <div class="buttons-shop">
-      <button class="orange-btn" style="display: flex; justify-content: center;
-      align-items: center; width: 45%;" @click="modalShow">
-        <p>Купить</p><img src="./img/kybok.png" alt=""
-        style="width: 15%; margin-left: 5px;">
-      </button>
+    <div class="buttons-shop" style="display: flex; justify-content: center;
+          align-items: center;">
       <div v-if="balance >= 10" style="width: 50%;">
         <button class="orange-btn" @click="fuelUpAll" v-if="!isFuel">
           <p>Заправить тачки</p>
@@ -146,7 +142,6 @@
           </div>
       </button>
     </div>
-    <ModalDonat/>
   </main>
 </template>
 
@@ -154,10 +149,9 @@
 import AtributesMarketCars from './components/AtributesMarketCars.vue';
 import axios from 'axios';
 import AtributesMarketParts from './components/AtributesMarketParts.vue';
-import ModalDonat from './components/ModalDonat.vue';
 
 export default{
-  components:{AtributesMarketCars, AtributesMarketParts, ModalDonat},
+  components:{AtributesMarketCars, AtributesMarketParts},
   data(){
     return{
       cars: null,
@@ -247,10 +241,6 @@ export default{
           this.getCheckParts();
         });
       }
-    },
-    modalShow(){
-      modalDonat.showModal();
-      document.body.style.overflow = 'hidden'
     },
     fuelUpAll(){
       if(this.balance >= 10){

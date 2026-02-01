@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('remember_token', 100)->collation('utf8mb4_unicode_ci')->nullable()->default(null);
             $table->timestamp('created_at')->nullable()->default(null);
             $table->timestamp('updated_at')->nullable()->default(null);
-            $table->integer('balance')->nullable(false)->default(0);
+            $table->integer('balance')->nullable(false)->default(100000);
         });
 
         // Добавляем первичный ключ и уникальный индекс

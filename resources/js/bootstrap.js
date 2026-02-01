@@ -3,8 +3,9 @@ import router from './router';
 
 window.axios = axios;
 
-// БАЗОВЫЕ НАСТРОЙКИ
-axios.defaults.baseURL = 'http://84.54.31.144';
+// БАЗОВЫЕ НАСТРОЙКИ - ИСПРАВЬТЕ BASE_URL!
+axios.defaults.baseURL = 'http://localhost:8000'; // или 'http://127.0.0.1:8000'
+
 axios.defaults.withCredentials = true;
 axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 axios.defaults.headers.common['Accept'] = 'application/json';
@@ -45,7 +46,7 @@ window.axios.interceptors.request.use(
   }
 );
 
-// ECHO (если используется)
+// ECHO - ИСПРАВЬТЕ WS_HOST!
 import Echo from 'laravel-echo';
 import Pusher from 'pusher-js';
 
@@ -53,10 +54,10 @@ window.Pusher = Pusher;
 
 window.Echo = new Echo({
     broadcaster: 'reverb',
-    key: import.meta.env.VITE_REVERB_APP_KEY,
-    wsHost: '84.54.31.144',
-    wsPort: 8080,
+    key: import.meta.env.VITE_REVERB_APP_KEY || 'app-key-12345',
+    wsHost: import.meta.env.VITE_REVERB_HOST || '127.0.0.1',
+    wsPort: import.meta.env.VITE_REVERB_PORT || 8080,
     forceTLS: false,
-    enabledTransports: ['ws'],
+    enabledTransports: ['ws', 'wss'],
     wsPath: '',
 });
