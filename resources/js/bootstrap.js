@@ -3,18 +3,44 @@ import router from './router';
 
 window.axios = axios;
 
-// БАЗОВЫЕ НАСТРОЙКИ - ИСПРАВЬТЕ BASE_URL!
-axios.defaults.baseURL = 'http://localhost:8000'; // или 'http://127.0.0.1:8000'
-
+// Базовая конфигурация
+axios.defaults.baseURL = '';
 axios.defaults.withCredentials = true;
 axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 axios.defaults.headers.common['Accept'] = 'application/json';
 
-// УСТАНОВКА ТОКЕНА ПРИ ЗАГРУЗКЕ ПРИЛОЖЕНИЯ
+// Получаем CSRF cookie при загрузке
+async function initializeCsrfToken() {
+    try {
+        // Очистим любые старые cookies
+        document.cookie.split(";").forEach(function(c) {
+            document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
+        });
+        
+        // Получаем новый CSRF token
+        await axios.get('/sanctum/csrf-cookie', {
+            withCredentials: true,
+            headers: {
+                'Accept': 'application/json',
+            }
+        });
+        
+        console.log('✅ CSRF cookie получен');
+    } catch (error) {
+        console.warn('⚠️ Не удалось получить CSRF cookie:', error.message);
+        // Для localhost иногда можно работать без CSRF
+    }
+}
+
+// Инициализируем при загрузке
+initializeCsrfToken();
+
+// Interceptors (ваш существующий код)
 const token = localStorage.getItem('auth_token');
 if (token) {
     axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
 }
+
 
 // ИНТЕРЦЕПТОР ДЛЯ АВТОРИЗАЦИИ
 window.axios.interceptors.response.use(
