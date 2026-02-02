@@ -9,13 +9,10 @@ class RaceSeeder extends Seeder
 {
     public function run(): void
     {
-        // Отключить проверку внешних ключей
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');
-        
-        // Очистить таблицу
+
         DB::table('races')->truncate();
-        
-        // Включить проверку обратно
+
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
 
         $races = [
@@ -54,7 +51,5 @@ class RaceSeeder extends Seeder
         foreach ($races as $race) {
             DB::table('races')->insert($race);
         }
-
-        $this->command->info('Таблица races заполнена тестовыми данными!');
     }
 }

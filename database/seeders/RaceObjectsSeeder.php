@@ -44,20 +44,10 @@ class RaceObjectsSeeder extends Seeder
                 'sliding' => 1,
                 'race_id' => 3,
             ],
-            [
-                'img' => '/storage/img/van.png',
-                'img_size' => 100,
-                'size' => 100,
-                'z_index' => 100,
-                'sliding' => 0,
-                'race_id' => 3,
-            ],
         ];
 
         foreach ($objects as $object) {
             DB::table('race_objects')->insert($object);
         }
-
-        $this->command->info('Таблица race_objects заполнена тестовыми данными!');
     }
 }

@@ -3,46 +3,30 @@ import router from './router';
 
 window.axios = axios;
 
-// Базовая конфигурация
 axios.defaults.baseURL = '';
 axios.defaults.withCredentials = true;
 axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 axios.defaults.headers.common['Accept'] = 'application/json';
 
-// Получаем CSRF cookie при загрузке
 async function initializeCsrfToken() {
-    try {
-        // Очистим любые старые cookies
-        document.cookie.split(";").forEach(function(c) {
-            document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
-        });
-        
-        // Получаем новый CSRF token
-        await axios.get('/sanctum/csrf-cookie', {
-            withCredentials: true,
-            headers: {
-                'Accept': 'application/json',
-            }
-        });
-        
-        console.log('✅ CSRF cookie получен');
-    } catch (error) {
-        console.warn('⚠️ Не удалось получить CSRF cookie:', error.message);
-        // Для localhost иногда можно работать без CSRF
-    }
+    document.cookie.split(";").forEach(function(c) {
+        document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
+    });
+    await axios.get('/sanctum/csrf-cookie', {
+        withCredentials: true,
+        headers: {
+            'Accept': 'application/json',
+        }
+    });
 }
 
-// Инициализируем при загрузке
 initializeCsrfToken();
 
-// Interceptors (ваш существующий код)
 const token = localStorage.getItem('auth_token');
 if (token) {
     axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
 }
 
-
-// ИНТЕРЦЕПТОР ДЛЯ АВТОРИЗАЦИИ
 window.axios.interceptors.response.use(
   (response) => response,
   (err) => {
@@ -58,7 +42,6 @@ window.axios.interceptors.response.use(
   }
 );
 
-// ИНТЕРЦЕПТОР ДЛЯ ДОБАВЛЕНИЯ ТОКЕНА К КАЖДОМУ ЗАПРОСУ
 window.axios.interceptors.request.use(
   (config) => {
       const token = localStorage.getItem('auth_token');
@@ -72,7 +55,6 @@ window.axios.interceptors.request.use(
   }
 );
 
-// ECHO - ИСПРАВЬТЕ WS_HOST!
 import Echo from 'laravel-echo';
 import Pusher from 'pusher-js';
 
