@@ -1,0 +1,17 @@
+[90m= [39m[34;4mIlluminate\Support\Collection[39;24m {#5340
+    [34mall[39m: [
+      {#5360
+        +"[1mid[22m": [35m3[39m,
+        +"[1mtokenable_type[22m": "[32mApp\Models\User[39m",
+        +"[1mtokenable_id[22m": [35m2[39m,
+        +"[1mname[22m": "[32mauth-token[39m",
+        +"[1mtoken[22m": "[32m3915be2d0fe9f1bf9dc3d0198603903e1dc26b1ae9d4ca4bb53e4a28e6bf6a70[39m",
+        +"[1mabilities[22m": "[32m["*"][39m",
+        +"[1mlast_used_at[22m": [36mnull[39m,
+        +"[1mexpires_at[22m": [36mnull[39m,
+        +"[1mcreated_at[22m": "[32m2026-05-09 22:30:39[39m",
+        +"[1mupdated_at[22m": "[32m2026-05-09 22:30:39[39m",
+      },
+    ],
+  }
+

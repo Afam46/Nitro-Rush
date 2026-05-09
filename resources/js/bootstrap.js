@@ -4,23 +4,8 @@ import router from './router';
 window.axios = axios;
 
 axios.defaults.baseURL = '';
-axios.defaults.withCredentials = true;
 axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 axios.defaults.headers.common['Accept'] = 'application/json';
-
-async function initializeCsrfToken() {
-    document.cookie.split(";").forEach(function(c) {
-        document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
-    });
-    await axios.get('/sanctum/csrf-cookie', {
-        withCredentials: true,
-        headers: {
-            'Accept': 'application/json',
-        }
-    });
-}
-
-initializeCsrfToken();
 
 const token = localStorage.getItem('auth_token');
 if (token) {
